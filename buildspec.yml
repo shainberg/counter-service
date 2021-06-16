@@ -8,7 +8,6 @@ env:
 phases:
   pre_build:
     commands:
-      - env
       - echo Logging in to Amazon ECR...
       - aws --version
       - REPO_ECR="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
