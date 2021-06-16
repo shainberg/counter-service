@@ -10,6 +10,6 @@ def index():
         counter+=1
         return "Hmm, Plus 1 please "
     else:
-        return str(f"Our counter is 3: {counter} ")
+        return str(f"Our counter is 5: {counter} ")
 if __name__ == '__main__':
     app.run(debug=True,port=80,host='0.0.0.0')
