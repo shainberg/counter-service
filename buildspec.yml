@@ -3,7 +3,7 @@ env:
   variables:
     REPO_ECR: "630943284793.dkr.ecr.eu-central-1.amazonaws.com/counter-service"
     AWS_DEFAULT_REGION: "eu-central-1"
-
+    AWS_ACCOUNT_ID: "630943284793"
 phases:
   pre_build:
     commands:
@@ -11,7 +11,10 @@ phases:
       - apt-get install -y awscli
       - echo Logging in to Amazon ECR...
       - aws --version
-      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - aws ecr get-login-password \
+        --region $(AWS_DEFAULT_REGION) | docker login \
+        --username AWS \
+        --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.us-east-1.amazonaws.com
       - REPOSITORY_URI=${REPO_ECR}
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
