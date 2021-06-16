@@ -1,4 +1,4 @@
-FROM python:3-slim
+FROM 630943284793.dkr.ecr.eu-central-1.amazonaws.com/python:3-slim
 
 WORKDIR /usr/src/app
 
