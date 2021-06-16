@@ -7,8 +7,7 @@ env:
 phases:
   pre_build:
     commands:
-      - apt-get update -y
-      - apt-get install -y awscli
+
       - echo Logging in to Amazon ECR...
       - aws --version
       - aws ecr get-login-password \
