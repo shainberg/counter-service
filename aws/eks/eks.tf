@@ -48,6 +48,16 @@ resource "aws_iam_role" "example" {
       Principal = {
         Service = "ec2.amazonaws.com"
       }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
     }]
     Version = "2012-10-17"
   })
@@ -83,7 +93,7 @@ module "my-cluster" {
 }
 
 resource "aws_eks_node_group" "example" {
-  cluster_name    = data.aws_eks_cluster.cluster.id 
+  cluster_name    = data.aws_eks_cluster.cluster.id
   node_group_name = data.aws_eks_cluster.cluster.id
   node_role_arn   = aws_iam_role.example.arn
   subnet_ids      = [data.aws_subnet.ckp-subnet-public-1.id, data.aws_subnet.ckp-subnet-public-2.id, data.aws_subnet.ckp-subnet-public-3.id]
