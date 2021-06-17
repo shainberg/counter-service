@@ -5,9 +5,13 @@ metadata:
   labels:
     app: cntsvc
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
-  - port: 80
+  - name: cntsvc
+    port: 80
+    targetPort: 80
+    nodePort: 30036
+    protocol: TCP
   selector:
     app: cntsvc
 ---
