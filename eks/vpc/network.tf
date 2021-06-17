@@ -24,6 +24,16 @@ resource "aws_route_table_association" "ckp-crta-public-subnet-1"{
     route_table_id = "${aws_route_table.ckp-public-crt.id}"
 }
 
+resource "aws_route_table_association" "ckp-crta-public-subnet-2"{
+    subnet_id = "${aws_subnet.ckp-subnet-public-2.id}"
+    route_table_id = "${aws_route_table.ckp-public-crt.id}"
+}
+
+resource "aws_route_table_association" "ckp-crta-public-subnet-3"{
+    subnet_id = "${aws_subnet.ckp-subnet-public-3.id}"
+    route_table_id = "${aws_route_table.ckp-public-crt.id}"
+}
+
 resource "aws_security_group" "ssh-allowed" {
     vpc_id = "${aws_vpc.ckp-vpc.id}"
 
