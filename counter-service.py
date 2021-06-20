@@ -17,7 +17,7 @@ def index():
             file1.close()
         return "Hmm, Plus 1 please "
     else:
-        return str(f"Our counter is 16: {counter} ")
+        return str(f"Our counter is: {counter} ")
 if __name__ == '__main__':
     if (path.exists(counter_file)):
         file1 = open(counter_file, 'r')
