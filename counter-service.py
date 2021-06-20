@@ -11,6 +11,7 @@ def index():
     global counter
     if request.method == "POST":
         counter+=1
+# Store the new value
         if (path.exists(counter_file)):
             file1 = open(counter_file, 'w')
             file1.write(str(counter))
@@ -19,6 +20,7 @@ def index():
     else:
         return str(f"Our counter is: {counter} ")
 if __name__ == '__main__':
+# Read the old value
     if (path.exists(counter_file)):
         file1 = open(counter_file, 'r')
         Line = file1.readline()
