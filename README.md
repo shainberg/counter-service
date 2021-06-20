@@ -7,6 +7,7 @@ the directory aws contains two directory using terraform:
 - eks: to create the eks cluster
 
 ## Pipeline - CI
+It's looking for commit and PR on the main branch.
 I have used AWS CodeBuild to create the image on ECR, the pipeline file is buildspec.yml.
 
 ## CD - Flux
