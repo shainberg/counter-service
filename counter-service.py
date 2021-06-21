@@ -17,7 +17,7 @@ def index():
         file1.close()
         return "Hmm, Plus 1 please "
     elif request.method == "GET":
-        return str(f"Our counter is: {counter} ")
+        return str(f"Current counter is: {counter} ")
     elif request.method == "DELETE":
         counter=0
 # Store the new value
