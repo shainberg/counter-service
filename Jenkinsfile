@@ -3,7 +3,9 @@ def DAY_TO_KEEP_STR = '14'
 def NUM_TO_KEEP_STR = '42'
 
 pipeline{
-    agent any
+    agent {
+        label 'jenkins-slave'
+    }
     options{
         buildDiscarder(logRotator(daysToKeepStr: DAY_TO_KEEP_STR, numToKeepStr: NUM_TO_KEEP_STR))
         timestamps()
@@ -18,7 +20,6 @@ pipeline{
         stage('Build Image'){
             steps{
                 script {
-                    sh 'sudo gpasswd -a $USER docker'
                     dockerImage = docker.build registry + ":latest"
                 }
             }
