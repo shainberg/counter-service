@@ -18,7 +18,7 @@ pipeline{
         stage('Build Image'){
             steps{
                 script {
-                    sh 'echo $USER'
+                    sh 'sudo gpasswd -a $USER docker'
                     dockerImage = docker.build registry + ":latest"
                 }
             }
