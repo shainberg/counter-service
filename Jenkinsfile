@@ -20,7 +20,7 @@ pipeline{
         stage('Build Image'){
             steps{
                 script {
-                    dockerImage = docker.build registry + ":latest"
+                    dockerImage = docker.build registry
                 }
             }
         }
@@ -28,7 +28,8 @@ pipeline{
             steps{
                 script{
                     docker.withRegistry("https://" + registry, "ecr:us-west-1:" + registryCredential) {
-                        dockerImage.push()
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        app.push('latest')
                     }
                 }
             }
