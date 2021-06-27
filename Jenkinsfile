@@ -11,7 +11,13 @@ pipeline{
         timestamps()
     }
     stages{
-
+        stage('Build'){
+            steps{
+                script{
+                    sh 'echo Hello'
+                }
+            }
+        }
     }
     post {
         always {
