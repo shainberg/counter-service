@@ -15,14 +15,14 @@ pipeline{
         dockerImage = ''
     }
     stages{
-        stage('Build'){
+        stage('Build Image'){
             steps{
                 script {
                     dockerImage = docker.build registry + ":latest"
                 }
             }
         }
-        stage('Deploy image') {
+        stage('Publish image') {
             steps{
                 script{
                     docker.withRegistry("https://" + registry, "ecr:us-west-1:" + registryCredential) {
