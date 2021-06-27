@@ -3,18 +3,31 @@ def DAY_TO_KEEP_STR = '14'
 def NUM_TO_KEEP_STR = '42'
 
 pipeline{
-//    agent {
-//        label 'linux-slave'
-//    }
+    agent any
     options{
         buildDiscarder(logRotator(daysToKeepStr: DAY_TO_KEEP_STR, numToKeepStr: NUM_TO_KEEP_STR))
         timestamps()
     }
+    environment {
+        version = 'latest'
+        registry = '630943284793.dkr.ecr.us-west-1.amazonaws.com/counter-service'
+        registryCredential = 'aws-creds'
+        dockerImage = ''
+    }
     stages{
         stage('Build'){
             steps{
+                script {
+                    dockerImage = docker.build registry + ":latest"
+                }
+            }
+        }
+        stage('Deploy image') {
+            steps{
                 script{
-                    sh 'echo Hello'
+                    docker.withRegistry("https://" + registry, "ecr:us-west-1:" + registryCredential) {
+                        dockerImage.push()
+                    }
                 }
             }
         }
