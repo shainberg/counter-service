@@ -29,7 +29,7 @@ pipeline{
                 script{
                     docker.withRegistry("https://" + registry, "ecr:us-west-1:" + registryCredential) {
                         dockerImage.push("${env.BUILD_NUMBER}")
-                        app.push('latest')
+                        dockerImage.push('latest')
                     }
                 }
             }
