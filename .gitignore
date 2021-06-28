@@ -127,7 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-eks/.terraform/
-jenkins/.terraform/
-eks/terraform.*
-jenkins/terraform.*
+infra-utils/eks/.terraform/
+infra-utils/jenkins/.terraform/
+infra-utils/eks/terraform.*
+infra-utils/jenkins/terraform.*

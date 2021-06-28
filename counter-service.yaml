@@ -20,7 +20,7 @@ spec:
   selector:
     matchLabels:
       app: counter-service
-  replicas: 1
+  replicas: 5
   template:
     metadata:
       labels:
