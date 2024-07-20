@@ -20,26 +20,25 @@ conn = pymysql.connect(
 # Create Table if it doesn't exist
 with conn.cursor() as cursor:
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS counter (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            count INT NOT NULL
+        CREATE TABLE IF NOT EXISTS global_count (
+        ID enum('count') NOT NULL,
+        count INT UNSIGNED DEFAULT '0',
+        primary key(ID)
         )
     """)
-    cursor.execute("SELECT * FROM counter")
-    if cursor.fetchone() is None:
-        cursor.execute("INSERT INTO counter (count) VALUES (0)")
-        conn.commit()
+    cursor.execute("INSERT IGNORE INTO global_count (ID) VALUES ('count')")
+    conn.commit()
         
 @app.route('/', methods=["POST", "GET"])
 def index():
     if request.method == "POST":
         with conn.cursor() as cursor:
-            cursor.execute("UPDATE counter SET count = count + 1 WHERE id = 1")
+            cursor.execute("UPDATE global_count SET count = count + 1 WHERE ID = 'count'")
             conn.commit()
         return "Hmm, Plus 1 please "
     else:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT count FROM counter WHERE id = 1")
+            cursor.execute("SELECT count FROM global_count")
             return str(f"Our counter is: {cursor.fetchone()[0]} ")
 if __name__ == '__main__':
     app.run(debug=True,port=80,host='0.0.0.0')
