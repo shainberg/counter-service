@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request
-import pymysql
+import mysql.connector
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 db_name = os.getenv("DB_NAME")
 
-conn = pymysql.connect(
+conn = mysql.connector.connect(
     host=db_host,
     user=db_user,
     password=db_password,
