@@ -67,9 +67,6 @@ jobs:
 
     - name: Create namespace
       run: |
-        kubectl -n ${{ env.NAMESPACE }} set env namespace/prod |
-        NAMESPACE=${{ env.NAMESPACE }} |
-        
         kubectl apply -f k8s/namespace.yaml
 
     - name: Deploy application and service
