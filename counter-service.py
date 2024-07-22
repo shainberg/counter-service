@@ -38,6 +38,7 @@ def index():
         return "Hmm, Plus 1 please "
     else:
         with conn.cursor() as cursor:
+            conn.commit()
             cursor.execute("SELECT count FROM global_count")
             return str(f"Our counter is: {cursor.fetchone()[0]} ")
 if __name__ == '__main__':
