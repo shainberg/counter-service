@@ -15,6 +15,7 @@ spec:
       containers:
       - name: amit-counter
         image: ${DOCKER_USERNAME}/${IMAGE_NAME_AND_TAG}
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
