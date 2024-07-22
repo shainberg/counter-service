@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: amit-counter
-        image: amitnd/counter-service:latest
+        image: ${DOCKER_USERNAME}/${IMAGE_NAME_AND_TAG}
         ports:
         - containerPort: 80
         env:
