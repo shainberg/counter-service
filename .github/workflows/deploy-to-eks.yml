@@ -34,11 +34,12 @@ jobs:
 
     - name: Build Docker image
       run: |
-        IMAGE_DATE=$(date +%Y%m%d%H%M%S)
         docker build -t ${{ env.DOCKER_USERNAME }}/counter-service:latest .
         
     - name: Tag Docker image
       run: |
+        IMAGE_DATE=$(date +%Y-%m-%d-%H-%M-%S)
+        echo ${IMAGE_DATE}
         docker image tag ${{ env.DOCKER_USERNAME }}/counter-service:latest ${{ env.DOCKER_USERNAME }}/counter-service:${IMAGE_DATE}
 
     - name: Push Docker image
