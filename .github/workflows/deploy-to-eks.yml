@@ -2,8 +2,8 @@ name: Deploy to EKS
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
   build-image-and-push:
@@ -71,14 +71,14 @@ jobs:
 
     - name: Deploy application and service
       run: |
-        kubectl -n ${{ env.NAMESPACE }} set env deployment/amit-counter-deployment |
-        DOCKER_USERNAME=${{ env.DOCKER_USERNAME }} |
-        IMAGE_NAME_AND_TAG=${{ env.IMAGE_NAME_AND_TAG }} |
-        DATABASE_ENDPOINT=${{ env.DATABASE_ENDPOINT }} |
-        DATABASE_USER=${{ secrets.DATABASE_USER }} |
-        DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} |
-        DATABASE_SCHEMA=${{ secrets.DATABASE_SCHEMA }}
+        sed -e "s/\${DOCKER_USERNAME}/${{ env.DOCKER_USERNAME }}/g" |
+            -e "s/\${IMAGE_NAME_AND_TAG}/${{ env.IMAGE_NAME_AND_TAG }}/g" |
+            -e "s/\${DATABASE_ENDPOINT}/${{ env.DATABASE_ENDPOINT }}/g" |
+            -e "s/\${DATABASE_USER}/${{ secrets.DATABASE_USER }}/g" |
+            -e "s/\${DATABASE_PASSWORD}/${{ secrets.DATABASE_PASSWORD }}/g" |
+            -e "s/\${DATABASE_SCHEMA}/${{ secrets.DATABASE_SCHEMA }}/g" |
+            k8s/deployment.yaml > deployment.yaml
 
-        kubectl -n ${{ env.NAMESPACE }} apply -f k8s/deployment.yaml
+        kubectl -n ${{ env.NAMESPACE }} apply -f deployment.yaml
         kubectl -n ${{ env.NAMESPACE }} apply -f k8s/service.yaml
         
