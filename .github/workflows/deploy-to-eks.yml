@@ -80,5 +80,7 @@ jobs:
             k8s/deployment.yaml > deployment.yaml
 
         kubectl -n ${{ env.NAMESPACE }} apply -f deployment.yaml
+        kubectl -n ${{ env.NAMESPACE }} rollout restart deployment/amit-counter-deployment
+        
         kubectl -n ${{ env.NAMESPACE }} apply -f k8s/service.yaml
         
