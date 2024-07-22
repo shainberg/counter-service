@@ -72,7 +72,6 @@ jobs:
     - name: Deploy application and service
       run: |
         kubectl -n ${{ env.NAMESPACE }} set env deployment/amit-counter-deployment |
-        NAMESPACE=${{ env.NAMESPACE }} |
         DOCKER_USERNAME=${{ env.DOCKER_USERNAME }} |
         IMAGE_NAME_AND_TAG=${{ env.IMAGE_NAME_AND_TAG }} |
         DATABASE_ENDPOINT=${{ env.DATABASE_ENDPOINT }} |
@@ -81,10 +80,5 @@ jobs:
         DATABASE_SCHEMA=${{ secrets.DATABASE_SCHEMA }}
 
         kubectl -n ${{ env.NAMESPACE }} apply -f k8s/deployment.yaml
-
-        kubectl -n ${{ env.NAMESPACE }} set env service/amit-counter-service |
-        NAMESPACE=${{ env.NAMESPACE }}
-        
         kubectl -n ${{ env.NAMESPACE }} apply -f k8s/service.yaml
         
-          
