@@ -71,12 +71,12 @@ jobs:
 
     - name: Deploy application and service
       run: |
-        sed -e "s/\${DOCKER_USERNAME}/${{ env.DOCKER_USERNAME }}/g" |
-            -e "s/\${IMAGE_NAME_AND_TAG}/${{ env.IMAGE_NAME_AND_TAG }}/g" |
-            -e "s/\${DATABASE_ENDPOINT}/${{ env.DATABASE_ENDPOINT }}/g" |
-            -e "s/\${DATABASE_USER}/${{ secrets.DATABASE_USER }}/g" |
-            -e "s/\${DATABASE_PASSWORD}/${{ secrets.DATABASE_PASSWORD }}/g" |
-            -e "s/\${DATABASE_SCHEMA}/${{ secrets.DATABASE_SCHEMA }}/g" |
+        sed -e "s/\${DOCKER_USERNAME}/${{ env.DOCKER_USERNAME }}/g" \
+            -e "s/\${IMAGE_NAME_AND_TAG}/${{ env.IMAGE_NAME_AND_TAG }}/g" \
+            -e "s/\${DATABASE_ENDPOINT}/${{ env.DATABASE_ENDPOINT }}/g" \
+            -e "s/\${DATABASE_USER}/${{ secrets.DATABASE_USER }}/g" \
+            -e "s/\${DATABASE_PASSWORD}/${{ secrets.DATABASE_PASSWORD }}/g" \
+            -e "s/\${DATABASE_SCHEMA}/${{ secrets.DATABASE_SCHEMA }}/g" \
             k8s/deployment.yaml > deployment.yaml
 
         kubectl -n ${{ env.NAMESPACE }} apply -f deployment.yaml
