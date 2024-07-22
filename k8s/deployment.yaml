@@ -14,15 +14,15 @@ spec:
     spec:
       containers:
       - name: amit-counter
-        image: $(DOCKER_USERNAME)/$(IMAGE_NAME_AND_TAG)
+        image: ${DOCKER_USERNAME}/${IMAGE_NAME_AND_TAG}
         ports:
         - containerPort: 80
         env:
         - name: DB_HOST
-          value: "$(DATABASE_ENDPOINT)"
+          value: "${DATABASE_ENDPOINT}"
         - name: DB_USER
-          value: "$(DATABASE_USER)"
+          value: "${DATABASE_USER}"
         - name: DB_PASSWORD
-          value: "$(DATABASE_PASSWORD)"
+          value: "${DATABASE_PASSWORD}"
         - name: DB_NAME
-          value: "$(DATABASE_SCHEMA)"
+          value: "${DATABASE_SCHEMA}"
