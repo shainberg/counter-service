@@ -39,6 +39,7 @@ jobs:
 
   deploy-k8s-to-eks:
     name: Deploy kubernetes to EKS
+    needs: build-image-and-push
     runs-on: ubuntu-latest
 
     env:
