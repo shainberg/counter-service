@@ -35,7 +35,7 @@ def index():
         with conn.cursor() as cursor:
             cursor.execute("UPDATE global_count SET count = count + 1 WHERE ID = 'count'")
             conn.commit()
-        return "Hmm, Plus 1 please "
+        return "Best counter in the world! "
     else:
         with conn.cursor() as cursor:
             conn.commit()
