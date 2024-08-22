@@ -1,15 +1,23 @@
 #!flask/bin/python
-from flask import Flask, request, request_started
+import uvicorn
+from fastapi import FastAPI
 
-app = Flask(__name__)
+app = FastAPI()
 counter = 0
-@app.route('/', methods=["POST", "GET"])
+
+
+@app.post('/')
 def index():
     global counter
-    if request.method == "POST":
-        counter+=1
-        return "Hmm, Plus 1 please "
-    else:
-        return str(f"Our counter is: {counter} ")
+    counter += 1
+    return "Hmm, Plus 1 please "
+
+
+@app.get('/')
+def get_counter():
+    global counter
+    return str(f"Our counter is: {counter} ")
+
+
 if __name__ == '__main__':
-    app.run(debug=True,port=80,host='0.0.0.0')
+    uvicorn.run(app, port=80, host='0.0.0.0', log_level="debug")
