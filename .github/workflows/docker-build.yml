@@ -11,7 +11,11 @@ env:
   TAG: counter
   VERSION: latest
   REGISTRY: ghcr.io
+  REGISTRY_HOST: "localhost:5000"
   IMAGE_NAME: ${{ github.repository }}
+  DOCKER_BUILDKIT: 0
+  COMPOSE_DOCKER_CLI_BUILD: 0
+
 
 jobs:
   build:
@@ -36,4 +40,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}${{ env.TAG }}:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY_HOST }}/${{ env.TAG }}:${{ env.VERSION }}
+
+      - name: Inspect
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY_HOST }}/${{ env.TAG }}:${{ env.VERSION }}
