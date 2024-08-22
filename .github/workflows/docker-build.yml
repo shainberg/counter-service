@@ -39,8 +39,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.GITHUB_REPOSITORY }}/${{ env.TAG }}:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.TAG }}:${{ env.VERSION }}
 
       - name: Inspect
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.GITHUB_REPOSITORY }}/${{ env.TAG }}:${{ env.VERSION }}
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.TAG }}:${{ env.VERSION }}
