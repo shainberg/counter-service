@@ -12,7 +12,7 @@ This project is a Counter Python web server that counts the number of POST reque
 
 - [Docker](https://docs.docker.com/get-docker/) installed on your machine.
 
-## Building the Docker Image
+## Local Run (as Container)
 
 1. **Clone the Repository**: 
 If you haven't already, clone the repository containing the Dockerfile and application code:
