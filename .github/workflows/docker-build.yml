@@ -36,4 +36,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ env.TAG }}:${{ env.VERSION }}
+          tags: ${{ vars.DOCKERHUB_USERNAME }}${{ env.TAG }}:${{ env.VERSION }}
