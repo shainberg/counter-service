@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "counter-service.fullname" . }}
+  labels:
+    app: {{ include "counter-service.name" . }}
+spec:
+  replicas: {{ .Values.image.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "counter-service.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "counter-service.name" . }}
+    spec:
+      containers:
+      - name: counter-service
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 80

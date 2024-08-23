@@ -3,8 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - master
-      - refactor
+      - '*'
 
 
 env:
@@ -17,8 +16,24 @@ env:
 
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: helm/helm-action@v2
+        with:
+          version: 'v3.9.0'
+
+      - name: Helm lint
+        run: |
+          helm lint path/to/your/chart
   build:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    runs-on: ubuntu-latest
+    needs: lint
     permissions:
       contents: read
       packages: write
