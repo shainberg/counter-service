@@ -18,9 +18,8 @@ env:
 jobs:
   lint-helm:
     runs-on: ubuntu-latest
-    needs: setup-helm
     steps:
-      - uses: ./.github/workflows/setup-helm.yml
+      - uses: ${{ github.repository }}/.github/workflows/setup-helm.yml
       - name: Helm lint
         run: |
           helm lint counter-service-chart
@@ -29,7 +28,7 @@ jobs:
     needs: lint-helm
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/workflows/setup-helm.yml
+      - uses: ${{ github.repository }}/.github/workflows/setup-helm.yml
       - name: Package Helm chart
         run: |
           helm package counter-service-chart  # Path to your chart directory
