@@ -17,11 +17,11 @@ jobs:
               echo "ENV=preprod" >>> "${GITHUB_ENV}"
               echo "IMAGE_TAG=main" >>> "${GITHUB_ENV}"
             elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-              TAG_NAME=$(echo ${GITHUB_REF} | sed 's/refs\/tags\///')
+              tag_name=$(echo ${GITHUB_REF} | sed 's/refs\/tags\///')
               echo "ENV==prod" >>> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=${{ TAG_NAME }}" >>> "${GITHUB_ENV}"
+              echo "IMAGE_TAG=${ tag_name }" >>> "${GITHUB_ENV}"
             else
-              BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///')
+              brunch_name=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///')
               echo "ENV==dev" >>> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=${{ BRANCH_NAME }}">>> "${GITHUB_ENV}"
+              echo "IMAGE_TAG=${ brunch_name }">>> "${GITHUB_ENV}"
             fi
