@@ -118,9 +118,20 @@ jobs:
 
       - name: Install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          # Fetch the latest stable version of kubectl
+          VERSION=$(curl -s https://dl.k8s.io/release/stable.txt)
+          
+          # Download the kubectl binary
+          curl -LO "https://dl.k8s.io/release/${VERSION}/bin/linux/amd64/kubectl"
+    
+          # Make the kubectl binary executable
           chmod +x ./kubectl
+      
+          # Move the kubectl binary to /usr/local/bin so it's available system-wide
           sudo mv ./kubectl /usr/local/bin/kubectl
+      
+          # Verify the installation
+          kubectl version --client
 
       - name: Configure kubectl for EKS
         run: |
