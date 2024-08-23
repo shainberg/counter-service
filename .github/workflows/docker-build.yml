@@ -161,4 +161,4 @@ jobs:
       - name: Helm upgrade/install
         run: helm upgrade --install ${{ needs.determine-environment-and-tag.outputs.env }} counter-service-chart \
             --set image.repository=${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} \
-            --set image.tag=${{ envneeds.determine-environment-and-tag.outputs.image_tag }}"
+            --set image.tag=${{ needs.determine-environment-and-tag.outputs.image_tag }}"
