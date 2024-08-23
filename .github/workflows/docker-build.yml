@@ -104,7 +104,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: package
+    needs:
+      - package
+      - build
     steps:
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
@@ -130,5 +132,5 @@ jobs:
 
       - name: Helm upgrade/install
         run: helm upgrade --install counter-service counter-service-chart \
-            --set image.repository=$${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:} \
+            --set image.repository=$${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} \
             --set image.tag=${{ env.VERSION }
