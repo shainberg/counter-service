@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       env: ${{ steps.gen-output.outputs.env }}
-      imagetag: ${{ steps.gen-output.outputs.image_tag }}
+      image_tag: ${{ steps.gen-output.outputs.image_tag }}
     steps:
       - name: Determine environment and image tag
         id: gen-output
@@ -38,8 +38,8 @@ jobs:
             echo "ENV=dev" >> "${GITHUB_ENV}"
             echo "IMAGE_TAG=${GITHUB_REF_NAME}" >> "${GITHUB_ENV}"
           fi
-          echo "ENV=${{ env.ENV }}" >> "$GITHUB_OUTPUT"
-          echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
+          echo "env=${{ env.ENV }}" >> "$GITHUB_OUTPUT"
+          echo "image_tag=${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}`
 
@@ -69,8 +69,8 @@ jobs:
       attestations: write
       id-token: write
     env:
-      IMAGE_TAG: ${{needs.determine-environment-and-tag.outputs.env}}
-      ENV: ${{needs.determine-environment-and-tag.outputs.env}}"
+      IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.env }}
+      ENV: ${{ needs.determine-environment-and-tag.outputs.env }}"
     steps:
       - name: Convert Repository Name to Lowercase
         id: lowercase
@@ -146,8 +146,8 @@ jobs:
       - determine-environment-and-tag
     environment: AWS
     env:
-      IMAGE_TAG: ${{needs.determine-environment-and-tag.outputs.env}}
-      ENV: ${{needs.determine-environment-and-tag.outputs.env}}"
+      IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.env }}
+      ENV: ${{ needs.determine-environment-and-tag.outputs.env }}"
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
