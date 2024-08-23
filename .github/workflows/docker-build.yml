@@ -30,7 +30,7 @@ jobs:
 
       - name: Helm lint
         run: |
-          helm lint ./counter-service-chart
+          helm lint counter-service-chart
   build:
     runs-on: ubuntu-latest
     needs: lint
