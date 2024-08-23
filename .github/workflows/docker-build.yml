@@ -75,10 +75,11 @@ jobs:
           # Convert the GITHUB_REPOSITORY to lowercase and set it as an environment variable
           lowercase_repo=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           echo "LOWER_REPO_NAME=${GITHUB_REPOSITORY}" >> "${GITHUB_ENV}"
+
       - name: Print environment variables
         run: |
-          echo "ENV=${{ needs.determine-environment-and-tag.outputs.env }}"
-          echo "IMAGE_TAG=${{ needs.determine-environment-and-tag.outputs.image_tag }}"
+          echo "ENV=${{needs.determine-environment-and-tag.outputs.env}}"
+          echo "IMAGE_TAG=${{needs.determine-environment-and-tag.outputs.image_tag}}"
 
       - name: Cache Docker layers
         uses: actions/cache@v3
@@ -102,13 +103,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ needs.determine-environment-and-tag.outputs.image_tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{needs.determine-environment-and-tag.outputs.image_tag}}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Inspect
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ needs.determine-environment-and-tag.outputs.image_tag }}"
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{needs.determine-environment-and-tag.outputs.image_tag}}"
 
   package:
     needs: lint-helm
@@ -159,6 +160,6 @@ jobs:
           version: ${{ env.HELM_VERSION }}
 
       - name: Helm upgrade/install
-        run: helm upgrade --install ${{ needs.determine-environment-and-tag.outputs.env }} counter-service-chart \
+        run: helm upgrade --install ${{needs.determine-environment-and-tag.outputs.env}} counter-service-chart \
             --set image.repository=${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} \
-            --set image.tag=${{ needs.determine-environment-and-tag.outputs.image_tag }}"
+            --set image.tag=${{needs.determine-environment-and-tag.outputs.image_tag}}"
