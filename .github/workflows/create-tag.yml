@@ -1,0 +1,42 @@
+name: Create Release Tag
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        required: true
+        type: string
+      commit_message:
+        required: true
+        type: string
+
+jobs:
+  create-release-tag:
+    runs-on: ubuntu-latest
+    if: startsWith(inputs.commit_message, "feat:") || startsWith(inputs.commit_message, 'fix:') || startsWith(inputs.commit_message, 'refactor:')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get current tag version
+        id: get_version
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0)
+          echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV
+          echo "LATEST_TAG=${latest_tag}"
+
+      - name: Determine new tag version
+        id: new_tag
+        run: |
+          latest_tag=${{ env.LATEST_TAG }}
+          tag_base=$(echo $latest_tag | sed 's/\.[0-9]*$//')
+          tag_number=$(echo $latest_tag | sed 's/.*\.//')
+          new_tag="${tag_base}.$((tag_number + 1))"
+          echo "NEW_TAG=${new_tag}" >> $GITHUB_ENV
+          echo "New tag will be ${new_tag}"
+
+      - name: Create new tag
+        run: |
+          git tag ${{ env.NEW_TAG }}
+          git push origin ${{ env.NEW_TAG }}
+

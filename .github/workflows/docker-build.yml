@@ -177,3 +177,9 @@ jobs:
 
       - name: Helm upgrade/install
         run:  helm upgrade --install ${{ env.ENV }} counter-service-chart --set image.repository=${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} --set image.tag=${{ env.IMAGE_TAG}}
+
+  tag-and-release:
+    uses: ./.github/workflows/create-tag.yml
+    with:
+      branch_name: ${{ github.ref_name }}
+      commit_message: ${{ github.event.head_commit.message }}
