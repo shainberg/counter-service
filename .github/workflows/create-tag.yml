@@ -11,12 +11,23 @@ on:
         type: string
 
 jobs:
+  check-commit-message:
+    runs-on: ubuntu-latest
+    outputs:
+      create_tag: ${{ steps.check-message.outputs.create_tag }}
+    steps:
+      - name: Check if commit message is relevant
+        id: check-message
+        run: |
+          if [[ "${{ inputs.commit_message }}" == feat:* ]] || [[ "${{ inputs.commit_message }}" == fix:* ]] || [[ "${{ inputs.commit_message }}" == refactor:* ]]; then
+            echo "create_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "create_tag=false" >> $GITHUB_OUTPUT
+          fi
   create-release-tag:
     runs-on: ubuntu-latest
-    if: |
-      startsWith(inputs.commit_message, "feat: ") || 
-      startsWith(inputs.commit_message, 'fix: ') || 
-      startsWith(inputs.commit_message, 'refactor: ')
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.create_tag == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
