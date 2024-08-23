@@ -156,8 +156,8 @@ jobs:
     environment: AWS
     env:
       IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.env }}
-      ENV: ${{ needs.determine-environment-and-tag.outputs.env }}"
-      LOWER_REPO_NAME:  ${{ needs.build.outputs.lower_repo_name }}"
+      ENV: ${{ needs.determine-environment-and-tag.outputs.env }}
+      LOWER_REPO_NAME:  ${{ needs.build.outputs.lower_repo_name }}
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
