@@ -4,31 +4,26 @@ on:
   workflow_call:
 
 jobs:
-  determine-environment-and-tag:
+  determine-env-and-tag:
       runs-on: ubuntu-latest
       outputs:
-        ENV: ${{ steps.set-env.outputs.env }}
-        IMAGE_TAG: ${{ steps.set-env.outputs.image_tag }}
+        env: ${{ steps.set-env.outputs.env }}
+        image_tag: ${{ steps.set-env.outputs.image_tag }}
       steps:
         - name: Determine environment and image tag
-          id: set-env
+          id: vars
           run: |
             if [[ "${GITHUB_REF_NAME}" == "main" || "${GITHUB_REF_NAME}" == "master" ]]; then
-              echo "ENV=preprod" >> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=main" >> "${GITHUB_ENV}"
+              echo "env=preprod" >> "${GITHUB_OUTPUT}"
+              echo "image_tag=main" >> "${GITHUB_OUTPUT}"
             elif [[ "${GITHUB_REF_NAME}" == v* ]]; then
               tag_name="${GITHUB_REF_NAME#v}"
-              echo "ENV=prod" >> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=${tag_name}" >> "${GITHUB_ENV}"
+              echo "env=prod" >> "${GITHUB_OUTPUT}"
+              echo "image_tag=${tag_name}" >> "${GITHUB_OUTPUT}"
             else
               brunch_name="${GITHUB_REF_NAME}"
-              echo "ENV=dev" >> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=${brunch_name}" >> "${GITHUB_ENV}"
+              echo "env=dev" >> "${GITHUB_OUTPUT}"
+              echo "image_tag=${brunch_name}" >> "${GITHUB_OUTPUT}"
             fi
           env:
             GITHUB_REF_NAME: ${{ github.ref_name }}`
-
-        - name: Print environment variables
-          run: |
-            echo "ENV=${{ env.ENV }}"
-            echo "IMAGE_TAG=${{ env.IMAGE_TAG }}"
