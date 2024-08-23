@@ -13,15 +13,15 @@ jobs:
         - name: Determine environment and image tag
           id: set-env
           run: |
-            if [[ "${GITHUB_REF}" == refs/heads/main || "${GITHUB_REF}" == refs/heads/master ]]; then
+            if [[ "${github.ref_name}" == refs/heads/main || "${github.ref_name}" == refs/heads/master ]]; then
               echo "ENV=preprod" >> "${GITHUB_ENV}"
               echo "IMAGE_TAG=main" >> "${GITHUB_ENV}"
-            elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-              tag_name=$(echo ${GITHUB_REF} | sed 's/refs\/tags\///')
+            elif [[ "${github.ref_name}" == refs/tags/* ]]; then
+              tag_name=$(echo ${github.ref_name} | sed 's/refs\/tags\///')
               echo "ENV==prod" >> "${GITHUB_ENV}"
               echo "IMAGE_TAG=${ tag_name }" >> "${GITHUB_ENV}"
             else
-              brunch_name=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///')
+              brunch_name=${github.ref_name#refs/heads/}
               echo "ENV==dev" >> "${GITHUB_ENV}"
               echo "IMAGE_TAG=${ brunch_name }" >> "${GITHUB_ENV}"
             fi
