@@ -19,28 +19,20 @@ env:
 jobs:
   determine-environment-and-tag:
     runs-on: ubuntu-latest
-    outputs:
-      env: ${{ steps.set-env.outputs.env }}
-      image_tag: ${{ steps.set-env.outputs.image_tag }}
     steps:
       - name: Determine environment and image tag
-        id: set-env
         run: |
           if [[ "${GITHUB_REF_NAME}" == "main" || "${GITHUB_REF_NAME}" == "master" ]]; then
-            echo "env=preprod" >> "$GITHUB_OUTPUT"
-            echo "image_tag=main" >> "$GITHUB_OUTPUT"
-            echo "env=preprod" >> "${GITHUB_ENV}"
-            echo "image_tag=main" >> "${GITHUB_ENV}"
+            echo "ENV=preprod" >> "${GITHUB_ENV}"
+            echo "IMAGE_TAG=main" >> "${GITHUB_ENV}"
           elif [[ "${GITHUB_REF_NAME}" == v* ]]; then
             tag_name="${GITHUB_REF_NAME#v}"
-            echo "env=prod" >> "${GITHUB_ENV}"
-            echo "image_tag=${tag_name}" >> "${GITHUB_ENV}"
+            echo "ENV=prod" >> "${GITHUB_ENV}"
+            echo "IMAGE_TAG=${tag_name}" >> "${GITHUB_ENV}"
           else
             brunch_name="${GITHUB_REF_NAME}"
-            echo "env=dev" >> "$GITHUB_OUTPUT"
-            echo "image_tag=${brunch_name}" >> "$GITHUB_OUTPUT"
-            echo "env=dev" >> "${GITHUB_ENV}"
-            echo "image_tag=${brunch_name}" >> "${GITHUB_ENV}"
+            echo "ENV=dev" >> "${GITHUB_ENV}"
+            echo "IMAGE_TAG=${brunch_name}" >> "${GITHUB_ENV}"
           fi
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}`
@@ -100,13 +92,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ needs.determine-environment-and-tag.outputs.image_tag }}"
+          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Inspect
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ needs.determine-environment-and-tag.outputs.image_tag }}"
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }}"
 
   package:
     needs: lint-helm
@@ -157,6 +149,6 @@ jobs:
           version: ${{ env.HELM_VERSION }}
 
       - name: Helm upgrade/install
-        run: helm upgrade --install ${{ needs.determine-environment-and-tag.outputs.env }} counter-service-chart \
+        run: helm upgrade --install ${{ env.ENV }} counter-service-chart \
             --set image.repository=${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} \
-            --set image.tag=${{ needs.determine-environment-and-tag.outputs.image_tag }}"
+            --set image.tag=${{ env.IMAGE_TAG }}"
