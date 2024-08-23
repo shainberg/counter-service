@@ -40,6 +40,12 @@ jobs:
           name: helm-chart
           path: counter-service-chart/*.tgz  # Path to the packaged chart file
 
+      - name: Upload Helm chart artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: helm-chart
+          path: counter-service-chart/*.tgz
+
   build:
     runs-on: ubuntu-latest
     needs: lint-helm

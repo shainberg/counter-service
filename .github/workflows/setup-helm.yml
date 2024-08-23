@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       helm-version:
-        required: true
+        required: false
         type: string
         default: 'v3.9.0'
 
