@@ -7,12 +7,12 @@ on:
 
 
 env:
-  TAG: counter
+  IMAGE: counter
   VERSION: latest
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
   DOCKER_BUILDKIT: 0
   COMPOSE_DOCKER_CLI_BUILD: 0
+  HELM_VERSION: 'v3.9.0'
 
 
 jobs:
@@ -26,35 +26,11 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v3
         with:
-          helm-version: ${{ inputs.helm-version }}
+          helm-version: ${{ env.HELM_VERSION }}
 
       - name: Helm lint
         run: |
           helm lint counter-service-chart
-
-  package:
-    needs: lint-helm
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v3
-        with:
-          helm-version: ${{ inputs.helm-version }}
-
-      - name: Upload Helm chart artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: helm-chart
-          path: counter-service-chart/*.tgz  # Path to the packaged chart file
-
-      - name: Upload Helm chart artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: helm-chart
-          path: counter-service-chart/*.tgz
 
   build:
     runs-on: ubuntu-latest
@@ -94,10 +70,64 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.TAG }}:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.VERSION }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Inspect
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.TAG }}:${{ env.VERSION }}
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.VERSION }}
+
+  package:
+    needs: lint-helm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          helm-version: ${{ env.HELM_VERSION }}
+
+      - name: Upload Helm chart artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: helm-chart
+          path: counter-service-chart/*.tgz  # Path to the packaged chart file
+
+      - name: Upload Helm chart artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: helm-chart
+          path: counter-service-chart/*.tgz
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ variable.AWS_REGION }}
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+      - name: Configure kubectl for EKS
+        run: |
+          aws eks update-kubeconfig --name ${{ variable.EKS_CLUSTER_NAME }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          helm-version: ${{ env.HELM_VERSION }}
+
+      - name: Helm upgrade/install
+        run: helm upgrade --install counter-service counter-service-chart \
+            --set image.repository=$${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:} \
+            --set image.tag=${{ env.VERSION }
