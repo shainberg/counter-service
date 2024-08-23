@@ -2,10 +2,6 @@ name: Reusable set environment and tag workflow
 
 on:
   workflow_call:
-    inputs:
-      config-path:
-        required: true
-        type: string
 
 jobs:
   determine-environment-and-tag:
