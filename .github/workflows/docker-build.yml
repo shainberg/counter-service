@@ -24,13 +24,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Helm
-        uses: helm/helm-action@v2
+        uses: azure/setup-helm@v2
         with:
           version: 'v3.9.0'
 
       - name: Helm lint
         run: |
-          helm lint path/to/your/chart
+          helm lint ./counter-service-chart
   build:
     runs-on: ubuntu-latest
     needs: lint
