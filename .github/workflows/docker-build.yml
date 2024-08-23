@@ -84,7 +84,7 @@ jobs:
         id: lowercase
         run: |
           # Convert the GITHUB_REPOSITORY to lowercase and set it as an environment variable
-          lower_repo_name=${GITHUB_REPOSITORY@L}
+          lower_repo_name=$(echo ${GITHUB_REPOSITORY@L})
           echo "LOWER_REPO_NAME=${lower_repo_name}" >> "${GITHUB_ENV}"
           echo "lower_repo_name=${lower_repo_name}" >> $GITHUB_OUTPUT
 
