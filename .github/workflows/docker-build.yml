@@ -3,12 +3,13 @@ name: CI CD Pipeline
 on:
   push:
     branches:
-      - '*'
+      - '**'
+    tags:
+      - '**'
 
 
 env:
   IMAGE: counter
-  VERSION: latest
   REGISTRY: ghcr.io
   DOCKER_BUILDKIT: 0
   COMPOSE_DOCKER_CLI_BUILD: 0
@@ -16,6 +17,8 @@ env:
 
 
 jobs:
+  determine-environment-and-tag:
+      uses: .github/workflows/determine-env-and-tag.yml
 
   lint-helm:
     runs-on: ubuntu-latest
@@ -34,7 +37,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: lint-helm
+    needs:
+      - lint-helm
+      - determine-environment-and-tag
     permissions:
       contents: read
       packages: write
@@ -70,13 +75,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Inspect
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.VERSION }}
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }}
 
   package:
     needs: lint-helm
@@ -107,6 +112,7 @@ jobs:
     needs:
       - package
       - build
+      - determine-environment-and-tag
     environment: AWS
     steps:
       - name: Configure AWS credentials
@@ -126,6 +132,6 @@ jobs:
           version: ${{ env.HELM_VERSION }}
 
       - name: Helm upgrade/install
-        run: helm upgrade --install counter-service counter-service-chart \
+        run: helm upgrade --install ${env.STAGE} counter-service-chart \
             --set image.repository=${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} \
-            --set image.tag=${{ env.VERSION }}
+            --set image.tag=${{ env.IMAGE_TAG }}
