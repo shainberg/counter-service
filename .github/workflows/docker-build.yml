@@ -18,7 +18,7 @@ env:
 
 jobs:
   determine-environment-and-tag:
-      uses: ${{ github.repository }}/.github/workflows/determine-env-and-tag.yml@refactor
+      uses: ./.github/workflows/determine-env-and-tag.yml@refactor
 
   lint-helm:
     runs-on: ubuntu-latest
