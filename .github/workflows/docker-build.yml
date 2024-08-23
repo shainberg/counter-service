@@ -158,6 +158,7 @@ jobs:
       IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.env }}
       ENV: ${{ needs.determine-environment-and-tag.outputs.env }}
       LOWER_REPO_NAME:  ${{ needs.build.outputs.lower_repo_name }}
+      REPOSITORY: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -178,7 +179,7 @@ jobs:
       - name: Helm upgrade/install
         run:  |
           helm upgrade --install ${{ env.ENV }} counter-service-chart \
-          --set image.repository=${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} \
+          --set image.repository=${{ env.REPOSITORY }} \
           --set image.tag=${{ env.IMAGE_TAG}}
 
   tag-and-release:

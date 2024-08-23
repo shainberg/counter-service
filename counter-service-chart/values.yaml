@@ -1,13 +1,9 @@
 image:
-  repository: my-python-app
-  tag: latest
+  repository: $REPOSITORY
+  tag: $IMAGE_TAG
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
   port: 80
   replicas: 3
-
-redis:
-  host: my-redis-cluster
-  port: 6379
