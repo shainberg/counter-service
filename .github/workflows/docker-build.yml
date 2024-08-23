@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: CI CD Pipeline
 
 on:
   push:
@@ -20,17 +20,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: 'v3.9.0'
-
+      - uses: ./.github/workflows/setup-helm.yml
       - name: Helm lint
         run: |
           helm lint counter-service-chart
+
+  package:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/setup-helm.yml
+      - name: Package Helm chart
+        run: |
+          helm package counter-service-chart  # Path to your chart directory
+
+      - name: Upload Helm chart artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: helm-chart
+          path: counter-service-chart/*.tgz  # Path to the packaged chart file
+
   build:
     runs-on: ubuntu-latest
     needs: lint
