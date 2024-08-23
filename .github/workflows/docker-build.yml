@@ -20,11 +20,11 @@ jobs:
   determine-environment-and-tag:
     runs-on: ubuntu-latest
     outputs:
-      env: ${{ steps.gen_output.outputs.env }}
-      image_tag: ${{ steps.gen_output.outputs.image_tag }}
+      env: ${{ steps.gen-output.outputs.env }}
+      image_tag: ${{ steps.gen-output.outputs.image_tag }}
     steps:
       - name: Determine environment and image tag
-        id: gen_output
+        id: gen-output
         run: |
           if [[ "${GITHUB_REF_NAME}" == "main" || "${GITHUB_REF_NAME}" == "master" ]]; then
             echo "ENV=preprod" >> "${GITHUB_ENV}"
@@ -38,8 +38,8 @@ jobs:
             echo "ENV=dev" >> "${GITHUB_ENV}"
             echo "IMAGE_TAG=${GITHUB_REF_NAME}" >> "${GITHUB_ENV}"
           fi
-          echo "env=${{ env.ENV }}" >> "$GITHUB_OUTPUT"
-          echo "image_tag=${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
+          echo "ENV=${{ env.ENV }}" >> "$GITHUB_OUTPUT"
+          echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}`
 
