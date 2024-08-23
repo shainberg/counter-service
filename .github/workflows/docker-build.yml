@@ -42,7 +42,7 @@ jobs:
           echo "image_tag=${{ env.IMAGE_TAG }}" >> $env:GITHUB_OUTPUT
           echo "env=${{ env.ENV }}
           echo "image_tag=${{ env.IMAGE_TAG }}"
-          cat $env:GITHUB_OUTPUT
+
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}`
 
