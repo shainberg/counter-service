@@ -14,14 +14,14 @@ jobs:
           id: set-env
           run: |
             if [[ "${GITHUB_REF}" == refs/heads/main || "${GITHUB_REF}" == refs/heads/master ]]; then
-              echo "ENV=preprod" >>> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=main" >>> "${GITHUB_ENV}"
+              echo "ENV=preprod" >> "${GITHUB_ENV}"
+              echo "IMAGE_TAG=main" >> "${GITHUB_ENV}"
             elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
               tag_name=$(echo ${GITHUB_REF} | sed 's/refs\/tags\///')
-              echo "ENV==prod" >>> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=${ tag_name }" >>> "${GITHUB_ENV}"
+              echo "ENV==prod" >> "${GITHUB_ENV}"
+              echo "IMAGE_TAG=${ tag_name }" >> "${GITHUB_ENV}"
             else
               brunch_name=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///')
-              echo "ENV==dev" >>> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=${ brunch_name }">>> "${GITHUB_ENV}"
+              echo "ENV==dev" >> "${GITHUB_ENV}"
+              echo "IMAGE_TAG=${ brunch_name }">> "${GITHUB_ENV}"
             fi
