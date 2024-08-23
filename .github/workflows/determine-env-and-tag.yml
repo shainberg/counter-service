@@ -14,20 +14,20 @@ jobs:
           id: set-env
           run: |
             if [[ "${GITHUB_REF_NAME}" == "main" || "${GITHUB_REF_NAME}" == "master" ]]; then
-            echo "env=preprod" >> "${GITHUB_OUTPUT}"
-              echo "image_tag=main" >> "${GITHUB_OUTPUT}"
+            echo "env=preprod" >> "$GITHUB_OUTPUT"
+              echo "image_tag=main" >> "$GITHUB_OUTPUT"
               echo "env=preprod" >> "${GITHUB_ENV}"
               echo "image_tag=main" >> "${GITHUB_ENV}"
             elif [[ "${GITHUB_REF_NAME}" == v* ]]; then
               tag_name="${GITHUB_REF_NAME#v}"
-              echo "env=prod" >> "${GITHUB_OUTPUT}"
-              echo "image_tag=${tag_name}" >> "${GITHUB_OUTPUT}"
+              echo "env=prod" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${tag_name}" >> "$GITHUB_OUTPUT"
               echo "env=prod" >> "${GITHUB_ENV}"
               echo "image_tag=${tag_name}" >> "${GITHUB_ENV}"
             else
               brunch_name="${GITHUB_REF_NAME}"
-              echo "env=dev" >> "${GITHUB_OUTPUT}"
-              echo "image_tag=${brunch_name}" >> "${GITHUB_OUTPUT}"
+              echo "env=dev" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${brunch_name}" >> "$GITHUB_OUTPUT"
               echo "env=dev" >> "${GITHUB_ENV}"
               echo "image_tag=${brunch_name}" >> "${GITHUB_ENV}"
             fi
