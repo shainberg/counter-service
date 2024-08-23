@@ -16,10 +16,18 @@ env:
 
 
 jobs:
+
   lint-helm:
     runs-on: ubuntu-latest
     steps:
-      - uses: ${{ github.repository }}/.github/workflows/setup-helm.yml
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          helm-version: ${{ inputs.helm-version }}
+
       - name: Helm lint
         run: |
           helm lint counter-service-chart
@@ -28,10 +36,13 @@ jobs:
     needs: lint-helm
     runs-on: ubuntu-latest
     steps:
-      - uses: ${{ github.repository }}/.github/workflows/setup-helm.yml
-      - name: Package Helm chart
-        run: |
-          helm package counter-service-chart  # Path to your chart directory
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          helm-version: ${{ inputs.helm-version }}
 
       - name: Upload Helm chart artifact
         uses: actions/upload-artifact@v3
