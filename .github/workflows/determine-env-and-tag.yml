@@ -23,5 +23,5 @@ jobs:
             else
               brunch_name=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///')
               echo "ENV==dev" >> "${GITHUB_ENV}"
-              echo "IMAGE_TAG=${ brunch_name }">> "${GITHUB_ENV}"
+              echo "IMAGE_TAG=${ brunch_name }" >> "${GITHUB_ENV}"
             fi
