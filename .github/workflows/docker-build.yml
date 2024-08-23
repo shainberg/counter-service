@@ -17,7 +17,7 @@ env:
 
 
 jobs:
-  determine-environment-and-tag:
+  call-reusable-workflow:
       uses: ./.github/workflows/determine-env-and-tag.yml
 
   lint-helm:
@@ -75,13 +75,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ needs.determine-environment-and-tag.vars.outputs.image_tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:$${{ needs.call-reusable-workflow.outputs.image_tag }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Inspect
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ needs.determine-environment-and-tag.vars.outputs.image_tag }}
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ needs.call-reusable-workflow.outputs.image_tag }}"
 
   package:
     needs: lint-helm
@@ -132,6 +132,6 @@ jobs:
           version: ${{ env.HELM_VERSION }}
 
       - name: Helm upgrade/install
-        run: helm upgrade --install ${{ needs.determine-environment-and-tag.vars.outputs.env }} counter-service-chart \
+        run: helm upgrade --install ${{ needs.call-reusable-workflow.outputs.env }} counter-service-chart \
             --set image.repository=${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }} \
-            --set image.tag=${{ needs.determine-environment-and-tag.vars.outputs.image_tag }}
+            --set image.tag=${{ needs.call-reusable-workflow.outputs.image_tag }}"
