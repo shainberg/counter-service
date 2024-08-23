@@ -27,7 +27,7 @@ jobs:
             else
               brunch_name="${GITHUB_REF_NAME}"
               echo "env=dev" >> "${GITHUB_OUTPUT}"
-              echo "image_tag=${brunch_name}" >> "${GITHUB_OUTPUTk}"
+              echo "image_tag=${brunch_name}" >> "${GITHUB_OUTPUT}"
               echo "env=dev" >> "${GITHUB_ENV}"
               echo "image_tag=${brunch_name}" >> "${GITHUB_ENV}"
             fi
