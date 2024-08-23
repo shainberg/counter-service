@@ -26,11 +26,11 @@ jobs:
             echo "ENV=preprod" >> "${GITHUB_ENV}"
             echo "IMAGE_TAG=main" >> "${GITHUB_ENV}"
           elif [[ "${GITHUB_REF_NAME}" == v* ]]; then
-            tag_name=$(echo "${{ GITHUB_REF_NAME }}")
+            tag_name=$(echo "${GITHUB_REF_NAME}")
             echo "ENV=prod" >> "${GITHUB_ENV}"
             echo "IMAGE_TAG=${tag_name}" >> "${GITHUB_ENV}"
           else
-            brunch_name=$(echo "${{ GITHUB_REF_NAME }}" | tr '[:upper:]' '[:lower:]')
+            brunch_name=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]')
             echo "ENV=dev" >> "${GITHUB_ENV}"
             echo "IMAGE_TAG=${GITHUB_REF_NAME}" >> "${GITHUB_ENV}"
           fi
