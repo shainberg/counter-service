@@ -16,7 +16,7 @@ env:
 
 
 jobs:
-  lint:
+  lint-helm:
     runs-on: ubuntu-latest
 
     steps:
