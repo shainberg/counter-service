@@ -1,22 +1,25 @@
 #!flask/bin/python
-import uvicorn
+from config_map_updater import ConfigMapUpdater
 from fastapi import FastAPI
+import uvicorn
 
 app = FastAPI()
 counter = 0
 
+NAMESPACE = 'default'  # replace with your namespace
+CONFIG_MAP = 'counter-service'  # replace with your ConfigMap name
+updater = ConfigMapUpdater(NAMESPACE, CONFIG_MAP)
 
 @app.post('/')
 def index():
-    global counter
-    counter += 1
+    updater.update_configmap();
     return "Hmm, Plus 1 please "
 
 
 @app.get('/')
 def get_counter():
-    global counter
-    return str(f"Our counter is: {counter} ")
+    data = updater.parse_data()
+    return str(f"Our counter is: {data.counter} ")
 
 
 if __name__ == '__main__':
