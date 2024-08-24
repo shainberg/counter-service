@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: ConfigMap
+metadata:
+  name: counter-service
+  labels:
+    app: {{ include "counter-service.name" . }}
+data:
+  counter.json: |
+    {
+      counter: 0
+    }

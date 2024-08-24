@@ -1,0 +1,9 @@
+image:
+  repository: $REPOSITORY
+  tag: $IMAGE_TAG
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  replicas: 3
