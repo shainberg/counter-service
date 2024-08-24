@@ -6,6 +6,8 @@ on:
       - '**'
     tags:
       - '**'
+  pull_request:
+    types: [ opened, reopened ]
 
 
 env:
@@ -153,11 +155,11 @@ jobs:
       - package
       - build
       - determine-environment-and-tag
-    environment: AWS
     env:
       IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.env }}
       ENV: ${{ needs.determine-environment-and-tag.outputs.env }}
       LOWER_REPO_NAME:  ${{ needs.build.outputs.lower_repo_name }}
+    environment: AWS-${env.ENV}
     steps:
       - name: Set environment variables
         run: echo "REPOSITORY=${REGISTRY}/${LOWER_REPO_NAME}/${IMAGE_TAG}" >> "${GITHUB_ENV}"
