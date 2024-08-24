@@ -1,46 +1,53 @@
 # Counter Web Server
 
-This project is a Counter Python web server that counts the number of POST requests it has served and returns the count on every GET request. The application is containerized using Docker for ease of deployment.
+This project provides a Python script and a FastAPI application for managing a counter stored in a Kubernetes ConfigMap. The counter can be retrieved and incremented through HTTP endpoints
 
+## Overview
+
+The project includes:
+- `ConfigMapUpdater`: A Python class that interacts with a Kubernetes ConfigMap to read and update a JSON-encoded counter.
+- A FastAPI application that provides HTTP endpoints to get and increment the counter.
+- 
 ## Features
 
-- **POST Requests**: Increments a counter for each POST request received.
-- **GET Requests**: Returns the current count of POST requests.
-- **Documentation**: Accessible at `/docs` endpoint.
+- **Atomic Updates**: Ensures the counter is updated atomically, handling conflicts with retries.
+- **REST API**: Provides a RESTful interface for interacting with the counter.
+  - **POST Requests**: Increments a counter for each POST request received.
+  - **GET Requests**: Returns the current count of POST requests.
+  - **Documentation**: Accessible at `/docs` endpoint.
 
-## Prerequisites
+## CI/CD Pipeline Overview
+This project utilizes a comprehensive CI/CD pipeline implemented via GitHub Actions. The pipeline automates several key tasks, including environment setup, code linting, building and pushing Docker images, packaging Helm charts, and deploying the application to AWS.
 
-- [Docker](https://docs.docker.com/get-docker/) installed on your machine.
+### Required Environment Variables
+These variables must be provided, typically as secrets or in the repository/workflow settings, because they contain sensitive information or are specific to the deployment environment:
 
-## Local Run (as Container)
+`AWS_ACCESS_KEY_ID`: An AWS IAM access key ID required to authenticate and access AWS services. This should be stored as a secret in the GitHub repository to keep it secure.
 
-1. **Clone the Repository**: 
-If you haven't already, clone the repository containing the Dockerfile and application code:
-    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
-    ```
-2. **Build the Docker Image**:
-Build the Docker image using the following command:
-    ```bash
-    docker build -t counter-web-server .
-    ```
-3. **Run the Docker Container**:
-Start a Docker container from the built image and expose the application's port. The application will run in detached mode:
-    ```bash
-    docker run -d -p 8000:8000 simple-web-server
-    ```
-4. **Accessing the Application**:
-Open a web browser or use a tool like curl to access http://localhost:8000/docs to verify that the server is up and running.
-5. **Stopping the Docker Container**:
-To stop the Docker container, first find the container ID:
-    ```bash
-    docker ps
-    ``` 
-Then, stop the container using the ID:
-    ```bash
-    docker stop <container_id>
-    ``` 
-Replace <container_id> with the ID of your running container.
+`AWS_SECRET_ACCESS_KEY`: The corresponding secret access key for the AWS IAM user. Like AWS_ACCESS_KEY_ID, this should also be stored securely as a secret.
+
+`AWS_REGION`: Specifies the AWS region where the resources are deployed (e.g., us-west-2). This ensures that the pipeline interacts with the correct regional AWS services.
+
+`EKS_CLUSTER_NAME`: The name of the Amazon EKS (Elastic Kubernetes Service) cluster where the application will be deployed. This variable is crucial for configuring kubectl to interact with the correct Kubernetes cluster.
 
 
+### Key Features:
+* **Branch and Tag-Based Workflow**: The pipeline triggers on all branches and tags, with specific behaviors depending on the branch or tag name.
+* **Environment Detection**: The determine-environment-and-tag job dynamically determines the deployment environment (dev, preprod, or prod) based on the branch or tag name and sets the appropriate Docker image tag.
+* **Helm Chart Linting and Packaging**: Helm charts are linted and packaged to ensure they meet quality standards before deployment.
+* **Docker Image Build and Push**: The application is built into a Docker image using Docker Buildx, with caching to speed up subsequent builds. The image is then pushed to GitHub Container Registry.
+* **AWS Deployment Configuration**: The pipeline uses environment variables for AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION) and for the EKS cluster name (EKS_CLUSTER_NAME). These variables are used to authenticate with AWS and deploy the application to an Amazon EKS cluster.
+* **Deployment to AWS**: The application is deployed to the specified Amazon EKS cluster using Helm, with environment-specific configurations.
+
+This setup ensures that the application is consistently built, tested, and deployed with minimal manual intervention, providing a robust mechanism for continuous delivery. The integration with AWS allows for seamless deployment and management of cloud resources.
+
+## Feature Tasks
+1. **Replace ConfigMap with a Database using a Repository Pattern**:
+
+    Implement a repository pattern to abstract data access, allowing for easy replacement of ConfigMap with a database like Redis or MongoDB.
+2. **Implement Logging**:
+
+    Replace print statements with the Python logging module for better log management and monitoring.
+3. **Integrate Pydantic Models**:
+
+    Use Pydantic to validate and structure API responses, ensuring consistency and type safety across endpoints.
