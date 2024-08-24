@@ -35,7 +35,7 @@ jobs:
       - name: Get current tag version
         id: get_version
         run: |
-          if git rev-parse --quiet --verify "$(git describe --tags --abbrev=0)" > /dev/null; then
+          if "$(git describe --tags --abbrev=0)" ; then
             latest_tag=$(git describe --tags --abbrev=0)
           else
             echo "No tags found in the repository."
