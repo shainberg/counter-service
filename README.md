@@ -1,3 +1,4 @@
+
 # Counter Web Server
 
 This project provides a Python script and a FastAPI application for managing a counter stored in a Kubernetes ConfigMap. The counter can be retrieved and incremented through HTTP endpoints
