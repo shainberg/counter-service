@@ -1,4 +1,4 @@
-name: CI CD Pipeline
+name:  Build, Lint and Deploy Dev
 
 on:
   push:
@@ -17,11 +17,6 @@ env:
 
 
 jobs:
-  determine-environment-and-tag:
-    uses: ./.github/workflows/determine-environment-and-tag.yml
-    needs:
-      - lint-helm
-
   lint-helm:
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +31,10 @@ jobs:
       - name: Helm lint
         run: |
           helm lint counter-service-chart
-
+  determine-environment-and-tag:
+    uses: ./.github/workflows/determine-environment-and-tag.yaml
+    needs:
+      - lint-helm
   build:
     runs-on: ubuntu-latest
     needs:
