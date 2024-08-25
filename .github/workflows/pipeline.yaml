@@ -126,4 +126,4 @@ jobs:
       - lint-helm
       - determine-environment-and-tag
     with:
-      env: {{ needs.determine-environment-and-tag.outputs.env }}"
+      env: {{ needs.determine-environment-and-tag.outputs.env }}
