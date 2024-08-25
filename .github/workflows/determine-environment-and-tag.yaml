@@ -20,9 +20,9 @@ jobs:
             env="prod"
             image_tag=$(echo "${GITHUB_REF_NAME}")
           else
-            brunch_name=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]')
+            branch_name=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]')
             env="dev"
-            image_tag=${brunch_name}
+            image_tag=${branch_name}
           fi
 
           # Set outputs for the workflow
@@ -33,4 +33,4 @@ jobs:
           echo "ENV=${env}"
           echo "IMAGE_TAG=${image_tag}"
         env:
-          GITHUB_REF_NAME: ${{ github.ref_name }}`
+          GITHUB_REF_NAME: ${{ github.ref_name }}
