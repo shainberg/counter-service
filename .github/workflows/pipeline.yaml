@@ -48,8 +48,8 @@ jobs:
       attestations: write
       id-token: write
     env:
-      IMAGE_TAG: ${{jobs.determine-environment-and-tag.outputs.image_tag}}
-      ENV: ${{jobs.determine-environment-and-tag.outputs.env}}
+      IMAGE_TAG: ${{jobs.determine-environment-and-tag.env.IMAGE_TAG}}
+      ENV: ${{jobs.determine-environment-and-tag.env.ENV}}
     steps:
       - name: Convert Repository Name to Lowercase
         id: lowercase
