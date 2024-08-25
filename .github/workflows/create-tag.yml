@@ -1,0 +1,85 @@
+name: Create Release Tag
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        required: true
+        type: string
+      commit_message:
+        required: true
+        type: string
+
+jobs:
+  check-commit-message:
+    runs-on: ubuntu-latest
+    environment: GitHub
+    outputs:
+      create_tag: ${{ steps.check-message.outputs.create_tag }}
+    steps:
+      - name: Check if commit message is relevant
+        id: check-message
+        run: |
+          if [[ "${{ inputs.commit_message }}" == feat:* ]] || [[ "${{ inputs.commit_message }}" == fix:* ]] || [[ "${{ inputs.commit_message }}" == refactor:* ]]; then
+            echo "create_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "create_tag=false" >> $GITHUB_OUTPUT
+          fi
+  create-release-tag:
+    runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.create_tag == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Necessary to fetch all tags and history
+
+      - name: Get latest tag
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 --always 2>&1)
+          if [[ $LATEST_TAG == *"fatal"* || $LATEST_TAG =~ [a-z] ]]; then
+            LATEST_TAG="0.0.0"  # Default starting version if no semantic tags exist
+          fi
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+
+      - name: Get commit type from message
+        id: commit_message
+        run: |
+            COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+            if [[ $COMMIT_MESSAGE == "fix:"* ]]; then
+              echo "::set-output name=type::fix"
+            elif [[ $COMMIT_MESSAGE == "feat:"* ]]; then
+              echo "::set-output name=type::feat"
+            elif [[ $COMMIT_MESSAGE == "refactor:"* ]]; then
+              echo "::set-output name=type::refactor"
+            else
+              echo "::set-output name=type::other"
+            fi
+      - name: Generate new tag
+        run: |
+          BASE_TAG=${{ env.LATEST_TAG }}
+          if [[ $BASE_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            MAJOR=$(echo $BASE_TAG | cut -d. -f1)
+            MINOR=$(echo $BASE_TAG | cut -d. -f2)
+            PATCH=$(echo $BASE_TAG | cut -d. -f3)
+
+            if [[ ${{ steps.commit_message.outputs.type }} == "fix" ]]; then
+              NEW_TAG="$MAJOR.$MINOR.$((PATCH+1))"
+            elif [[ ${{ steps.commit_message.outputs.type }} == "feat" ]]; then
+              NEW_TAG="$MAJOR.$((MINOR+1)).0"
+            elif [[ ${{ steps.commit_message.outputs.type }} == "refactor" ]]; then
+              NEW_TAG="$((MAJOR+1)).0.0"
+            fi
+          else
+            NEW_TAG="0.1.0"  # Start versioning from here if no valid semantic version is found
+          fi
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+
+      - name: Push new tag
+        if: ${{ env.NEW_TAG != '' }}
+        run: |
+          git tag ${{ env.NEW_TAG }}
+          git push origin ${{ env.NEW_TAG }}
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
