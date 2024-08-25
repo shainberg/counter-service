@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-    types: [closed]
+    types: [ opened, reopened ]
 
 jobs:
   determine-environment-and-tag:
