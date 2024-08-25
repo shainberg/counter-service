@@ -47,6 +47,9 @@ jobs:
       packages: write
       attestations: write
       id-token: write
+    env:
+      IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.image_tag }}
+      ENV: ${{ needs.determine-environment-and-tag.outputs.env }}
     steps:
       - name: Convert Repository Name to Lowercase
         id: lowercase
@@ -59,8 +62,8 @@ jobs:
       - name: Print environment variables
         run: |
           # Print the values to the log for debugging
-          echo "ENV=${{env.ENV}}"
-          echo "IMAGE_TAG=${{env.IMAGE_TAG}}"
+          echo "ENV=${env}"
+          echo "IMAGE_TAG=${image_tag}"
 
       - name: Cache Docker layers
         uses: actions/cache@v3
