@@ -121,7 +121,7 @@ jobs:
           path: counter-service-chart/*.tgz
 
   deploy:
-    uses: ./.github/workflows/deploy-template.yml
+    uses: ./.github/workflows/deploy-template.yaml
     needs:
       - lint-helm
       - determine-environment-and-tag
