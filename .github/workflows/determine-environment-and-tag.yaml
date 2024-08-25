@@ -6,8 +6,8 @@ jobs:
   determine-environment-and-tag:
     runs-on: ubuntu-latest
     outputs:
-      output_env: ${{ steps.gen-output.outputs.env }}
-      output_image_tag: ${{ steps.gen-output.outputs.image_tag }}
+      env: ${{ steps.gen-output.outputs.env }}
+      image_tag: ${{ steps.gen-output.outputs.image_tag }}
     steps:
       - name: Determine environment and image tag
         id: gen-output

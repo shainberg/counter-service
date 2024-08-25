@@ -31,6 +31,7 @@ jobs:
       - name: Helm lint
         run: |
           helm lint counter-service-chart
+
   determine-tag:
     runs-on: ubuntu-latest
     steps:
