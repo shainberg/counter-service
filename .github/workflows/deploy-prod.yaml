@@ -18,7 +18,7 @@ jobs:
     needs:
       - determine-environment-and-tag
     with:
-      env: {{ needs.determine-environment-and-tag.outputs.env }}
+      env: ${{ needs.determine-environment-and-tag.outputs.env }}
 
   tag-and-release:
     uses: ./.github/workflows/create-tag.yml
