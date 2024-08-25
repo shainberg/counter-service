@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run determine-environment-and-tag
-        uses: ./.github/workflows/determine-environment-and-tag
+        uses: ./.github/workflows/determine-environment-and-tag.yaml
         id: determine-environment-and-tag
 
       - name: Set Outputs
