@@ -2,6 +2,9 @@ name: Deploy Helm Chart
 
 on:
   workflow_call:
+    env:
+      required: true
+      type: string
 
 jobs:
   deploy:

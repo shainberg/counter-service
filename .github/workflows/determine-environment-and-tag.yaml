@@ -1,10 +1,6 @@
 name: Determine Environment
 on:
   workflow_call:
-    inputs:
-      env:
-        required: true
-        type: string
 
 jobs:
   determine-environment-and-tag:
