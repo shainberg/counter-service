@@ -32,8 +32,10 @@ jobs:
 
 
           # Print the values to the log for debugging
-          echo "ENV=${env}"
-          echo "IMAGE_TAG=${image_tag}"
+          # Save outputs to a file
+          echo "env=${env}" > outputs.txt
+          echo "image_tag=${image_tag}" >> outputs.txt
+
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
       - name: Upload environment data as artifact
