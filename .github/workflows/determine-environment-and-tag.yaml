@@ -9,9 +9,6 @@ jobs:
       env: ${{ steps.gen-output.outputs.env }}
       image_tag: ${{ steps.gen-output.outputs.image_tag }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Determine environment and image tag
         id: gen-output
         run: |
