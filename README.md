@@ -18,9 +18,25 @@ The project includes:
   - **Documentation**: Accessible at `/docs` endpoint.
 
 ## CI/CD Pipeline Overview
-This project utilizes a comprehensive CI/CD pipeline implemented via GitHub Actions. The pipeline automates several key tasks, including environment setup, code linting, building and pushing Docker images, packaging Helm charts, and deploying the application to AWS.
+This project uses a GitHub Actions-based CI/CD pipeline to automate linting, building, and deploying the application across different environments.
 
-### Required Environment Variables
+### Pipeline Steps:
+1. **Lint Helm Charts**: Validates Helm chart syntax and structure.
+2. **Determine Environment and Image Tag**: Automatically sets the environment:
+   * _**dev**_ for non-main branches.
+   * **_preprod_** for main or master branches.
+   * _**prod**_ for version tags (e.g., v1.0.0).
+3. **Build and Push Docker Image**: Builds the Docker image and pushes it to the GitHub Container Registry. Tags are dynamically generated based on the branch or tag.
+4. **Deploy Application**: Deploys the application using Helm:
+   * _**dev**_ deployments for non-main branches.
+   * _**preprod**_ deployments for the main branch.
+   * _**prod**_ deployments for version tags.
+### Triggers:
+1. Push Events: Runs on pushes to all branches for continuous integration and deployment.
+2. Tag Pushes: Triggers prod deployments when a version tag is pushed (e.g., v1.0.0).
+3. Pull Request Events: Validates the code on pull requests to ensure it passes checks before merging.
+
+## Required Environment Variables
 These variables must be provided, typically as secrets or in the repository/workflow settings, because they contain sensitive information or are specific to the deployment environment:
 
 `AWS_ACCESS_KEY_ID`: An AWS IAM access key ID required to authenticate and access AWS services. This should be stored as a secret in the GitHub repository to keep it secure.
