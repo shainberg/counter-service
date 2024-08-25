@@ -35,17 +35,17 @@ jobs:
   determine-tag:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Run determine-environment-and-tag
-        uses: ./.github/actions/determine-environment-and-tag.yaml
+      - name: Call Determine Environment Workflow
+        uses: ./.github/workflows/determine-environment-and-tag.yaml
         id: determine-environment-and-tag
 
       - name: Set Outputs
         run: |
           echo "ENV=${{ steps.determine-environment-and-tag.outputs.env }}" >> $GITHUB_ENV
           echo "IMAGE_TAG=${{ steps.determine-environment-and-tag.outputs.image_tag }}" >> $GITHUB_ENV
-
   build:
     runs-on: ubuntu-latest
     needs:
