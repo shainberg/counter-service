@@ -14,8 +14,6 @@ jobs:
   check-commit-message:
     runs-on: ubuntu-latest
     environment: GitHub
-    env:
-      GITHUB_TOKEN: ${{ secrets.PAT }}
     outputs:
       create_tag: ${{ steps.check-message.outputs.create_tag }}
     steps:
@@ -83,3 +81,5 @@ jobs:
         run: |
           git tag ${{ env.NEW_TAG }}
           git push origin ${{ env.NEW_TAG }}
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
