@@ -35,7 +35,7 @@ jobs:
           echo "IMAGE_TAG=${image_tag}" >> $GITHUB_ENV
 
   deploy-preprod:
-    uses: ./.github/workflows/deploy-template.yml
+    uses: ./.github/workflows/deploy-template.yaml
     needs:
       - determine-environment-and-tag
     with:
@@ -48,7 +48,7 @@ jobs:
       commit_message: ${{ github.event.head_commit.message }}
   
   deploy-prod:
-    uses: ./.github/workflows/deploy-template.yaml
+    uses: ./.github/workflows/deploy-template.yaaml
     needs:
       - tag-and-release
       - determine-environment-and-tag
