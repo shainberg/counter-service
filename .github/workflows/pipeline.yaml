@@ -64,8 +64,8 @@ jobs:
           source outputs.txt
           echo "ENV=${env}"
           echo "IMAGE_TAG=${image_tag}"
-          echo "env=${env}" >> $GITHUB_ENV
-          echo "image_tag=${image_tag}" >> $GITHUB_ENV
+          echo "ENV=${env}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${image_tag}" >> $GITHUB_ENV
 
       - name: Convert Repository Name to Lowercase
         id: lowercase
