@@ -41,5 +41,5 @@ jobs:
     steps:
       - name: print
         run: |
-          echo "ENV=${needs.determine-environment-and-tag.outputs.image_tag}"
-          echo "IMAGE_TAG=${needs.determine-environment-and-tag.outputs.env}"
+          echo "ENV=${{needs.determine-environment-and-tag.outputs.image_tag}}"
+          echo "IMAGE_TAG=${{needs.determine-environment-and-tag.outputs.env}}"
