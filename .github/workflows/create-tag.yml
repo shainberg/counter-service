@@ -35,11 +35,10 @@ jobs:
           fetch-depth: 0  # Necessary to fetch all tags and history
 
       - name: Get latest tag
-        id: latest_tag
         run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0 --always)
-          if [[ $LATEST_TAG == *"fatal"* ]]; then
-            echo "LATEST_TAG=0.0.0"  # Default starting version if no tags exist
+          LATEST_TAG=$(git describe --tags --abbrev=0 --always 2>&1)
+          if [[ $LATEST_TAG == *"fatal"* || $LATEST_TAG =~ [a-z] ]]; then
+            LATEST_TAG="0.0.0"  # Default starting version if no semantic tags exist
           fi
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
@@ -57,22 +56,24 @@ jobs:
               echo "::set-output name=type::other"
             fi
       - name: Generate new tag
-        if: steps.commit_message.outputs.type != 'other'
         run: |
           BASE_TAG=${{ env.LATEST_TAG }}
-          MAJOR=$(echo $BASE_TAG | cut -d. -f1)
-          MINOR=$(echo $BASE_TAG | cut -d. -f2)
-          PATCH=$(echo $BASE_TAG | cut -d. -f3)
-          
-          if [[ ${{ steps.commit_message.outputs.type }} == "fix" ]]; then
-            NEW_TAG="$MAJOR.$MINOR.$((PATCH+1))"
-          elif [[ ${{ steps.commit_message.outputs.type }} == "feat" ]]; then
-            NEW_TAG="$MAJOR.$((MINOR+1)).0"
-          elif [[ ${{ steps.commit_message.outputs.type }} == "refactor" ]]; then
-            NEW_TAG="$((MAJOR+1)).0.0"
+          if [[ $BASE_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            MAJOR=$(echo $BASE_TAG | cut -d. -f1)
+            MINOR=$(echo $BASE_TAG | cut -d. -f2)
+            PATCH=$(echo $BASE_TAG | cut -d. -f3)
+
+            if [[ ${{ steps.commit_message.outputs.type }} == "fix" ]]; then
+              NEW_TAG="$MAJOR.$MINOR.$((PATCH+1))"
+            elif [[ ${{ steps.commit_message.outputs.type }} == "feat" ]]; then
+              NEW_TAG="$MAJOR.$((MINOR+1)).0"
+            elif [[ ${{ steps.commit_message.outputs.type }} == "refactor" ]]; then
+              NEW_TAG="$((MAJOR+1)).0.0"
+            fi
+          else
+            NEW_TAG="0.1.0"  # Start versioning from here if no valid semantic version is found
           fi
-            
-            echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Push new tag
         if: env.NEW_TAG != ''
