@@ -16,7 +16,7 @@ jobs:
     env:
       IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.env }}
       LOWER_REPO_NAME:  ${{ needs.build.outputs.lower_repo_name }}
-    environment: ${{ 'AWS-'inputs.env }}
+    environment: ${{ 'AWS-' + inputs.env }}
     steps:
       - name: Set environment variables
         run: echo "REPOSITORY=${REGISTRY}/${LOWER_REPO_NAME}/${IMAGE_TAG}" >> "${GITHUB_ENV}"
