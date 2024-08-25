@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '**'
+  create:
     tags:
       - '*'
   pull_request:
