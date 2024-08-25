@@ -10,8 +10,20 @@ on:
     types: [closed]
 
 jobs:
-  determine-environment-and-tag:
-    uses: ./.github/workflows/determine-environment-and-tag.yaml
+  determine-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run determine-environment-and-tag
+        uses: ./.github/actions/determine-environment-and-tag.yaml
+        id: determine-environment-and-tag
+
+      - name: Set Outputs
+        run: |
+          echo "ENV=${{ steps.determine-environment-and-tag.outputs.env }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ steps.determine-environment-and-tag.outputs.image_tag }}" >> $GITHUB_ENV
+  
 
   deploy-preprod:
     uses: ./.github/workflows/deploy-template.yml
