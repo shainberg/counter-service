@@ -123,5 +123,7 @@ jobs:
     needs:
       - lint-helm
       - determine-environment-and-tag
+      - package
+      - build
     with:
       env: ${{ needs.determine-environment-and-tag.outputs.env }}
