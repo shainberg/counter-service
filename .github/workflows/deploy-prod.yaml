@@ -42,7 +42,7 @@ jobs:
       env: ${{ needs.determine-environment-and-tag.outputs.env }}
 
   tag-and-release:
-    uses: ./.github/workflows/create-tag.yml
+    uses: ./.github/workflows/create-tag.yaml
     with:
       branch_name: ${{ github.ref_name }}
       commit_message: ${{ github.event.head_commit.message }}
