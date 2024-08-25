@@ -47,6 +47,9 @@ jobs:
       IMAGE_TAG: ${{needs.determine-environment-and-tag.outputs.output_image_tag}}
       ENV: ${{needs.determine-environment-and-tag.outputs.output_env}}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: determine-environment-and-tag
         uses: ./.github/workflows/determine-environment-and-tag.yaml
         id: determine-environment-and-tag
