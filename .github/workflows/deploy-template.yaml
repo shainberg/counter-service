@@ -10,9 +10,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    needs:
-      - determine-environment-and-tag
-      - build
     env:
       IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.image_tag }}
       LOWER_REPO_NAME: ${{ needs.build.outputs.lower_repo_name }}
