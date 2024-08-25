@@ -16,7 +16,6 @@ jobs:
   load-env-vars:
     runs-on: ubuntu-latest
     needs:
-      - lint-helm
       - determine-environment-and-tag
     steps:
       - name: Checkout repository
