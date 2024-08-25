@@ -31,11 +31,26 @@ jobs:
       - name: Helm lint
         run: |
           helm lint counter-service-chart
+  determine-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run determine-environment-and-tag
+        uses: ./.github/actions/determine-environment-and-tag
+        id: determine-environment-and-tag
+
+      - name: Set Outputs
+        run: |
+          echo "ENV=${{ steps.determine-environment-and-tag.outputs.env }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ steps.determine-environment-and-tag.outputs.image_tag }}" >> $GITHUB_ENV
 
   build:
     runs-on: ubuntu-latest
     needs:
       - lint-helm
+      - determine-tag
     outputs:
       lower_repo_name: ${{ steps.lowercase.outputs.lower_repo_name }}
     permissions:
@@ -43,17 +58,7 @@ jobs:
       packages: write
       attestations: write
       id-token: write
-    env:
-      IMAGE_TAG: ${{needs.determine-environment-and-tag.outputs.output_image_tag}}
-      ENV: ${{needs.determine-environment-and-tag.outputs.output_env}}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: determine-environment-and-tag
-        uses: ./.github/workflows/determine-environment-and-tag.yaml
-        id: determine-environment-and-tag
-
       - name: Convert Repository Name to Lowercase
         id: lowercase
         run: |
