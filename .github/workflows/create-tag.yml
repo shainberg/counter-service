@@ -31,25 +31,51 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Necessary to fetch all tags and history
 
-      - name: Get current tag version
-        id: get_version
+      - name: Get latest tag
+        id: latest_tag
         run: |
-          latest_tag=$(git describe --tags --abbrev=0)
-          echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV
-          echo "LATEST_TAG=${latest_tag}"
+          LATEST_TAG=$(git describe --tags --abbrev=0 --always)
+          if [[ $LATEST_TAG == *"fatal"* ]]; then
+            echo "LATEST_TAG=0.0.0"  # Default starting version if no tags exist
+          fi
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
-      - name: Determine new tag version
-        id: new_tag
+      - name: Get commit type from message
+        id: commit_message
         run: |
-          latest_tag=${{ env.LATEST_TAG }}
-          tag_base=$(echo $latest_tag | sed 's/\.[0-9]*$//')
-          tag_number=$(echo $latest_tag | sed 's/.*\.//')
-          new_tag="${tag_base}.$((tag_number + 1))"
-          echo "NEW_TAG=${new_tag}" >> $GITHUB_ENV
-          echo "New tag will be ${new_tag}"
+            COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+            if [[ $COMMIT_MESSAGE == "fix:"* ]]; then
+              echo "::set-output name=type::fix"
+            elif [[ $COMMIT_MESSAGE == "feat:"* ]]; then
+              echo "::set-output name=type::feat"
+            elif [[ $COMMIT_MESSAGE == "refactor:"* ]]; then
+              echo "::set-output name=type::refactor"
+            else
+              echo "::set-output name=type::other"
+            fi
+      - name: Generate new tag
+        if: steps.commit_message.outputs.type != 'other'
+        run: |
+          BASE_TAG=${{ env.LATEST_TAG }}
+          MAJOR=$(echo $BASE_TAG | cut -d. -f1)
+          MINOR=$(echo $BASE_TAG | cut -d. -f2)
+          PATCH=$(echo $BASE_TAG | cut -d. -f3)
+          
+          if [[ ${{ steps.commit_message.outputs.type }} == "fix" ]]; then
+            NEW_TAG="$MAJOR.$MINOR.$((PATCH+1))"
+          elif [[ ${{ steps.commit_message.outputs.type }} == "feat" ]]; then
+            NEW_TAG="$MAJOR.$((MINOR+1)).0"
+          elif [[ ${{ steps.commit_message.outputs.type }} == "refactor" ]]; then
+            NEW_TAG="$((MAJOR+1)).0.0"
+          fi
+            
+            echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
-      - name: Create new tag
+      - name: Push new tag
+        if: env.NEW_TAG != ''
         run: |
           git tag ${{ env.NEW_TAG }}
           git push origin ${{ env.NEW_TAG }}
