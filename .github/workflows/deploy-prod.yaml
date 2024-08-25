@@ -48,7 +48,7 @@ jobs:
       commit_message: ${{ github.event.head_commit.message }}
   
   deploy-prod:
-    uses: ./.github/workflows/deploy-template.yaaml
+    uses: ./.github/workflows/deploy-template.yaml
     needs:
       - tag-and-release
       - determine-environment-and-tag
