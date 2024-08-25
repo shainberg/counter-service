@@ -26,8 +26,8 @@ jobs:
           fi
 
           # Set outputs for the workflow
-          echo "env=${env}" >> $GITHUB_OUTPUT
-          echo "image_tag=${image_tag}" >> $GITHUB_OUTPUT
+          echo "ENV=${env}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${image_tag}" >> $GITHUB_ENV
 
           # Print the values to the log for debugging
           echo "ENV=${env}"
