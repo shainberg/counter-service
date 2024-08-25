@@ -1,0 +1,40 @@
+name: Determine Environment
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+        type: string
+
+jobs:
+  determine-environment-and-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.gen-output.outputs.env }}
+      image_tag: ${{ steps.gen-output.outputs.image_tag }}
+    steps:
+      - name: Determine environment and image tag
+        id: gen-output
+        run: |
+          # Determine environment and image tag based on the ref name
+          if [[ "${GITHUB_REF_NAME}" == "main" || "${GITHUB_REF_NAME}" == "master" ]]; then
+            env="preprod"
+            image_tag="main"
+          elif [[ "${GITHUB_REF_NAME}" == v* ]]; then
+            env="prod"
+            image_tag=$(echo "${GITHUB_REF_NAME}")
+          else
+            brunch_name=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]')
+            env="dev"
+            image_tag=${brunch_name}
+          fi
+
+          # Set outputs for the workflow
+          echo "env=${env}" >> $GITHUB_OUTPUT
+          echo "image_tag=${image_tag}" >> $GITHUB_OUTPUT
+
+          # Print the values to the log for debugging
+          echo "ENV=${env}"
+          echo "IMAGE_TAG=${image_tag}"
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}`

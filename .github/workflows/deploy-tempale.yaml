@@ -1,0 +1,41 @@
+name: Deploy Helm Chart
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - package
+      - build
+      - determine-environment-and-tag
+    env:
+      IMAGE_TAG: ${{ needs.determine-environment-and-tag.outputs.env }}
+      LOWER_REPO_NAME:  ${{ needs.build.outputs.lower_repo_name }}
+    environment: ${{ 'AWS-'inputs.env }}
+    steps:
+      - name: Set environment variables
+        run: echo "REPOSITORY=${REGISTRY}/${LOWER_REPO_NAME}/${IMAGE_TAG}" >> "${GITHUB_ENV}"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{vars.AWS_REGION}}
+
+      - name: Configure kubectl for EKS
+        run: |
+          aws eks update-kubeconfig --name ${{ vars.EKS_CLUSTER_NAME }} --region ${{vars.AWS_REGION}}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Helm upgrade/install
+        run:  |
+          helm upgrade --install ${{ env.ENV }} counter-service-chart \
+          --set image.repository=${{ env.REPOSITORY }} \
+          --set image.tag=${{ env.IMAGE_TAG}}

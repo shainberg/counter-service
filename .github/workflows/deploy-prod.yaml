@@ -1,0 +1,35 @@
+name: Merge Deployment Workflow
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  determine-environment-and-tag:
+    uses: ./.github/workflows/determine-environment-and-tag.yml
+
+  deploy-preprod:
+    uses: ./.github/workflows/deploy-template.yml
+    needs:
+      - determine-environment-and-tag
+    with:
+      env: {{ needs.determine-environment-and-tag.outputs.env }}
+
+  tag-and-release:
+    uses: ./.github/workflows/create-tag.yml
+    with:
+      branch_name: ${{ github.ref_name }}
+      commit_message: ${{ github.event.head_commit.message }}
+  
+  deploy-prod:
+    uses: ./.github/workflows/deploy-template.yml
+    needs:
+      - tag-and-release
+      - determine-environment-and-tag
+    with:
+      env: "prod"
