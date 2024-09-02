@@ -10,6 +10,9 @@ redis_port = int(os.getenv('REDIS_PORT', 6379))
 # Connect to redis
 r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
+# Test connection and crash if not connected
+r.ping()
+
 # Define key name
 key = 'counter'
 
