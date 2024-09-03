@@ -1,0 +1,42 @@
+# Default values.yaml for counter-service app
+
+global:
+  appName: counter-service
+  namespace: prod
+
+deployment:
+  container:
+    appImage: 630943284793.dkr.ecr.eu-west-1.amazonaws.com/counter-service
+    appTag: 0.2.0
+    imagePullPolicy: Always  
+
+    port:
+      portName: http
+      containerPort: 80
+    
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 256Mi
+        cpu: 100m
+
+service:
+  serviceType: LoadBalancer
+  annotations: {}
+  protocol: TCP 
+  port: 80
+  targetPort: 80
+
+configmap:
+  data:
+    REDIS_HOST: counter-service-redis-master
+    REDIS_PORT: "6379" 
+
+horizontalPodAutoscaler:
+  minReplicas: 1
+  maxReplicas: 5
+  resource:
+    cpuAverageUtilization: 80
+    memoryAverageUtilization: 80

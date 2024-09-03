@@ -12,13 +12,13 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Copy requirements file
-COPY ./app/requirements.txt /app/requirements.txt
+COPY requirements.txt /app/requirements.txt
 
 # Install all modules required
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app contents to container
-COPY ./app /app
+COPY counter-service.py /app/counter-service.py
 
 # expose app port
 EXPOSE 80
@@ -27,4 +27,4 @@ EXPOSE 80
 ENV FLASK_APP=counter-service.py
 
 # Run the application
-CMD ["flask", "run", "--host=0.0.0.0", "--port=80"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:80", "counter-service:app"]

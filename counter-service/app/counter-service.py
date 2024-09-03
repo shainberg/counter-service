@@ -1,19 +1,19 @@
 #!flask/bin/python
 import os
 import redis
-from flask import Flask, request, request_started
+from flask import Flask, request
 
 # Get env variables from configMap, if no values exist set to localhost:6379
 redis_host = os.getenv('REDIS_HOST', 'localhost')
 redis_port = int(os.getenv('REDIS_PORT', 6379))
 
 # Connect to redis
-r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+r = redis.Redis(host=redis_host, port=redis_port, decode_responses=True)
 
 # Test connection and crash if not connected
 r.ping()
 
-# Define key name
+# Define key name for redis
 key = 'counter'
 
 app = Flask(__name__)
@@ -23,8 +23,9 @@ def index():
 
     if request.method == "POST":
         
-        # Increase counter by 1 and update variable
+        # Increase value of key in redis
         r.incr(key)
+        # update counter variable with value from redis
         counter = int(r.get(key))
 
         return "Hmm, Plus 1 please "
