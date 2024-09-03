@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:Eilon01/checkpoint-task.git
+    repoURL: git@github.com:Eilon01/counter-service.git
     targetRevision: HEAD
     path: argocd/apps
     directory:

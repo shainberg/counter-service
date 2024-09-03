@@ -19,7 +19,7 @@ spec:
       - name: readinessProbe.httpGet.path
         value: /healthz
     path: argocd/helm-charts/counter-service
-    repoURL: git@github.com:Eilon01/checkpoint-task.git
+    repoURL: git@github.com:Eilon01/counter-service.git
     targetRevision: main
   syncPolicy:
     automated:
