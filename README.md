@@ -6,15 +6,18 @@ Repository stracture to help you find what you need
 ```bash
 .
 ├── .github/workflows/
-│   └── counter-ci.yaml     = Github actions CI job    
+│   └── counter-ci.yaml     = Github actions CI job
+│
 ├── argocd/
 │   ├── my-apps.yaml        = Argocd app of apps manifest
 │   ├── apps/               = Argocd apps manifest
 │   ├── git-repos/          = Git repositories connected to argocd 
 │   └── helm-charts/        = Helm charts for argocd to deploy
+│
 ├── counter-service/
 │   ├── counter-service.py  = counter-service application
 │   └── Dockerfile          = Dockerfile for counter-service
+│
 └── terraform-eks/
     └── main.tf             = Main terraform file for deploying infrastructure
 ```
