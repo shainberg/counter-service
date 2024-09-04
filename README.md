@@ -16,6 +16,18 @@ Repository stracture to help you find what you need
 │   └── Dockerfile          = Dockerfile for counter-service
 └── terraform-eks/
     └── main.tf             = Main terraform file for deploying infrastructure
+my-app/
+├─ node_modules/
+├─ public/
+│  ├─ favicon.ico
+│  ├─ index.html
+│  ├─ robots.txt
+├─ src/
+│  ├─ index.css
+│  ├─ index.js
+├─ .gitignore
+├─ package.json
+├─ README.md
 
 
 ## Terraform - Key Points
