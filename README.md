@@ -30,6 +30,7 @@ Repository stracture to help you find what you need
 - Ebs CSI controller deployed
 
 ## Counter Service - Key Points
+- Created Dockerfile with slim base image
 - Counter is saved in redis database, backed up by pvc
 - Gets credentials with configMap
 
