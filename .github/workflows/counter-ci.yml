@@ -27,7 +27,7 @@ jobs:
 
       - name: Get short commit SHA
         id: vars
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV && pwd
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV && pwd && ls -l
 
       - name: Build and push
         uses: docker/build-push-action@v6
