@@ -32,6 +32,9 @@ service:
   port: 81
   targetPort: 80
 
+  ingress:
+    create: true
+
 configmap:
   data:
     REDIS_HOST: counter-better-redis-master
