@@ -20,5 +20,5 @@ spec:
               service:
                 name: {{ .Values.global.appName }}
                 port:
-                  number: {{ .Values.service.targetPort }}
+                  number: {{ .Values.service.port }}
 {{- end }}
