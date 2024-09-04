@@ -11,6 +11,17 @@ jobs:
       matrix:
         counter: [counter-service, counter-better]
     steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get short commit SHA
+        id: vars
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Update build version
+        run: |
+          sed -i "s/version = .*/version = '${SHORT_SHA}'/" ${{ matrix.counter}}/app/${{ matrix.counter}}.py
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -23,13 +34,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get short commit SHA
-        id: vars
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v6

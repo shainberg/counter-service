@@ -15,6 +15,7 @@ r.ping()
 
 # Define key name for redis
 key = 'counter'
+version = '1.0.0'
 
 app = Flask(__name__)
 

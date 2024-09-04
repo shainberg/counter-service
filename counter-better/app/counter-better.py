@@ -15,6 +15,7 @@ r.ping()
 
 # Define key name for redis
 key = 'counter'
+version = '1.0.0'
 
 app = Flask(__name__)
 
@@ -35,7 +36,7 @@ def index():
         # Get couter value
         counter = int(r.get(key) or 0)     #set to 0 if doesnt exist
         
-        return render_template('index.html', counter=counter)
+        return render_template('index.html', counter=counter, version=version)
     
 if __name__ == '__main__':
     app.run(debug=True,port=80,host='0.0.0.0')
