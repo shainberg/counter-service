@@ -5,6 +5,9 @@ global:
   namespace: prod
 
 deployment:
+  rollingUpdate:
+    maxUnavailable: 0
+  
   container:
     appImage: eilon01/counter-service
     appTag: 3e26db2
@@ -13,9 +16,6 @@ deployment:
     port:
       portName: http
       containerPort: 80
-
-    rollingUpdate:
-      maxUnavailable: 0
     
     resources:
       requests:
