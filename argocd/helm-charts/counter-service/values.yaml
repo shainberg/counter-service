@@ -35,7 +35,7 @@ configmap:
     REDIS_PORT: "6379" 
 
 horizontalPodAutoscaler:
-  minReplicas: 1
+  minReplicas: 2
   maxReplicas: 5
   resource:
     cpuAverageUtilization: 80
