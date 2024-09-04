@@ -6,7 +6,7 @@ global:
 
 deployment:
   container:
-    appImage: 630943284793.dkr.ecr.eu-west-1.amazonaws.com/counter-service
+    appImage: eilon01/counter-service
     appTag: 3e26db2
     imagePullPolicy: Always  
 
