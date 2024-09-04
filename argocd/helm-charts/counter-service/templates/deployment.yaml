@@ -4,6 +4,10 @@ metadata:
   name: {{ .Values.global.appName }}
   namespace: {{ .Values.global.namespace }}
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.rollingUpdate.maxUnavailable }}
   selector:
     matchLabels:
       app: {{ .Values.global.appName }}

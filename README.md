@@ -10,7 +10,7 @@ Repository stracture to help you find what you need
 │
 ├── argocd/
 │   ├── my-apps.yaml        = Argocd app of apps manifest
-│   ├── apps/               = Argocd apps manifest
+│   ├── apps/               = Argocd apps manifests
 │   ├── git-repos/          = Git repositories connected to argocd 
 │   └── helm-charts/        = Helm charts for argocd to deploy
 │
@@ -30,8 +30,10 @@ Repository stracture to help you find what you need
 - Ebs CSI controller deployed
 
 ## Counter Service - Key Points
+- Created Dockerfile with slim base image
 - Counter is saved in redis database, backed up by pvc
 - Gets credentials with configMap
+- Deployed using a custom helm chart
 
 ## Github Actions - Key Points
 - Running on every commit to main branch
