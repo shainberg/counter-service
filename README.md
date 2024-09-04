@@ -33,6 +33,7 @@ Repository stracture to help you find what you need
 - Created Dockerfile with slim base image
 - Counter is saved in redis database, backed up by pvc
 - Gets credentials with configMap
+- Deployed using a custom helm chart
 
 ## Github Actions - Key Points
 - Running on every commit to main branch
