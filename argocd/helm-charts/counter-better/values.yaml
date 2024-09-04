@@ -10,7 +10,7 @@ deployment:
   
   container:
     appImage: eilon01/counter-better
-    appTag: 43398b3
+    appTag: d5e0b6e
     imagePullPolicy: Always  
 
     port:
