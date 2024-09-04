@@ -32,7 +32,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: service-counter/app/
+          context: service-counter/service-counter/app/
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/counter-service:${{ env.SHORT_SHA }}         
 
