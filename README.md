@@ -38,7 +38,7 @@ Repository stracture to help you find what you need
 - Building and pushing new docker image to dockerhub with last commit SHA as tag
 - Updates counter-service's helm chart image tag 
 
-## Argocd - Key Points
+## ArgoCD - Key Points
 - Being deployed with terraform
 - Deploying apps by code
 - Using app of apps
