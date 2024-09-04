@@ -10,7 +10,7 @@ Repository stracture to help you find what you need
 │
 ├── argocd/
 │   ├── my-apps.yaml        = Argocd app of apps manifest
-│   ├── apps/               = Argocd apps manifest
+│   ├── apps/               = Argocd apps manifests
 │   ├── git-repos/          = Git repositories connected to argocd 
 │   └── helm-charts/        = Helm charts for argocd to deploy
 │
