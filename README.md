@@ -18,6 +18,10 @@ Repository stracture to help you find what you need
 │   ├── counter-service.py  = counter-service application
 │   └── Dockerfile          = Dockerfile for counter-service
 │
+├── counter-better/
+│   ├── counter-better.py  = counter-better application
+│   └── Dockerfile          = Dockerfile for counter-better
+│
 └── terraform-eks/
     └── main.tf             = Main terraform file for deploying infrastructure
 ```
@@ -34,11 +38,12 @@ Repository stracture to help you find what you need
 - Counter is saved in redis database, backed up by pvc
 - Gets credentials with configMap
 - Deployed using a custom helm chart
+- Counter-better app with nicer ui and POST button
 
 ## Github Actions - Key Points
 - Running on every commit to main branch
 - Building and pushing new docker image to dockerhub with last commit SHA as tag
-- Updates counter-service's helm chart image tag 
+- Updates counter-service's and counter-better's helm chart image tag 
 
 ## ArgoCD - Key Points
 - Being deployed with terraform

@@ -18,7 +18,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app contents to container
-COPY counter-service.py /app/counter-service.py
+COPY counter-better.py /app/counter-better.py
 COPY templates /app/templates
 COPY static /app/static
 
@@ -26,7 +26,7 @@ COPY static /app/static
 EXPOSE 80
 
 # Define environment variable
-ENV FLASK_APP=counter-service.py
+ENV FLASK_APP=counter-better.py
 
 # Run the application
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:80", "counter-service:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:80", "counter-better:app"]

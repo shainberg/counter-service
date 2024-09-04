@@ -71,6 +71,7 @@ jobs:
   
   update-tag:
     runs-on: ubuntu-latest
+    needs: [build-counter-service, build-counter-better]
 
     steps:
       

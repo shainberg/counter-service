@@ -10,7 +10,7 @@ deployment:
   
   container:
     appImage: eilon01/counter-service
-    appTag: 3e26db2
+    appTag: ffb5aee
     imagePullPolicy: Always  
 
     port:
