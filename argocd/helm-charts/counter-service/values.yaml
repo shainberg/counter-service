@@ -7,7 +7,7 @@ global:
 deployment:
   container:
     appImage: 630943284793.dkr.ecr.eu-west-1.amazonaws.com/counter-service
-    appTag: 0.2.0
+    appTag: 952ba42
     imagePullPolicy: Always  
 
     port:
