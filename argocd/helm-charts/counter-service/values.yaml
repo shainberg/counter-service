@@ -13,6 +13,9 @@ deployment:
     port:
       portName: http
       containerPort: 80
+
+    rollingUpdate:
+      maxUnavailable: 0
     
     resources:
       requests:
