@@ -38,7 +38,7 @@ Repository stracture to help you find what you need
 - Counter is saved in redis database, backed up by pvc
 - Gets credentials with configMap
 - Deployed using a custom helm chart
-- Counter-better app with nicer ui and POST button
+- Counter-better app with nicer ui, POST button and build version
 
 ## Github Actions - Key Points
 - Running on every commit to main branch
