@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world-ingress
+  namespace: default  # Change to your desired namespace if needed
+spec:
+  ingressClassName: alb  # Use the AWS ALB ingress class
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-world-service  # Your service name
+                port:
+                  number: 80  # Service port
