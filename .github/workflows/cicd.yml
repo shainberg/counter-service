@@ -81,6 +81,6 @@ jobs:
   
         - name: Deploy to EKS
           run: |
-            kubectl set image deployment/counter-service counter-service=${{ vars.DOCKER_HUB_USERNAME }}/counter-service:latest  # Update with your app and image names
-            kubectl rollout status deployment/counter-service     
+            kubectl set image deployment/counter-service-deployment counter-service-deployment=${{ vars.DOCKER_HUB_USERNAME }}/counter-service:latest  # Update with your app and image names
+            kubectl rollout status deployment/counter-service-deployment    
           
