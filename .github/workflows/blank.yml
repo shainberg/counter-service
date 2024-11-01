@@ -28,7 +28,7 @@ jobs:
         id: vars 
         run: |
           echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-          echo "The SHORT_SHA name is $GITHUB_ENV
+          echo "The SHORT_SHA name is ${GITHUB_ENV}
         
       
       - name: Set up QEMU
