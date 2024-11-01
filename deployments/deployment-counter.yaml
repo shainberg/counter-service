@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter-service-deployment
+  namespace: default  # Change to your desired namespace if needed
+spec:
+  replicas: 1  # Number of pods to run
+  selector:
+    matchLabels:
+      app: counter-service
+  template:
+    metadata:
+      labels:
+        app: counter-service
+    spec:
+      containers:
+      - name: counter-service
+        image: ruslanve/counter-service:latest # Replace this with your image
+        ports:
+        - port: 80
+          targetPort: 80
+          protocol: TCP
