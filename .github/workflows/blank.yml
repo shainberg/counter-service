@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        run: docker/setup-buildx-action@v1
+        run: docker/setup-buildx-action@v3
 
       # Runs a set of commands using the runners shell
       - name: Log in to Docker Hub
