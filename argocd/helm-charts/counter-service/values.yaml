@@ -1,0 +1,48 @@
+# Default values.yaml for counter-service app
+
+global:
+  appName: counter-service
+  namespace: prod
+
+deployment:
+  rollingUpdate:
+    maxUnavailable: 0
+  
+  container:
+    appImage: eilon01/counter-service
+    appTag: 0d7afdf
+    imagePullPolicy: Always  
+
+    port:
+      portName: http
+      containerPort: 80
+    
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 256Mi
+        cpu: 100m
+
+service:
+  serviceType: LoadBalancer
+  annotations: {}
+  protocol: TCP 
+  port: 80
+  targetPort: 80
+
+  ingress:
+    create: true
+
+configmap:
+  data:
+    REDIS_HOST: counter-service-redis-master
+    REDIS_PORT: "6379" 
+
+horizontalPodAutoscaler:
+  minReplicas: 2
+  maxReplicas: 5
+  resource:
+    cpuAverageUtilization: 80
+    memoryAverageUtilization: 80

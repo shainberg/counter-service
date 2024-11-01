@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.appName }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.rollingUpdate.maxUnavailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.appName }}
+    spec:
+      containers:
+      - name: {{ .Values.global.appName }}
+        imagePullPolicy: {{ .Values.deployment.container.imagePullPolicy }}
+        image: "{{ .Values.deployment.container.appImage }}:{{ .Values.deployment.container.appTag }}"
+        ports:
+        - name: {{ .Values.deployment.container.port.portName }}
+          containerPort: {{ .Values.deployment.container.port.containerPort }}
+        resources:
+            requests:
+              memory: {{ .Values.deployment.container.resources.requests.memory }}
+              cpu: {{ .Values.deployment.container.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.deployment.container.resources.limits.memory }}
+              cpu: {{ .Values.deployment.container.resources.limits.cpu }}
+        env:
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.global.appName }}
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.global.appName }}
+              key: REDIS_PORT

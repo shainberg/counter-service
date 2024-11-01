@@ -1,0 +1,70 @@
+name:  Build, Push and Update Values.yaml
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-counter-apps:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        counter: [counter-service, counter-better]
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get short commit SHA
+        id: vars
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Update build version
+        run: |
+          sed -i "s/version = .*/version = '${SHORT_SHA}'/" ${{ matrix.counter}}/app/${{ matrix.counter}}.py
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.counter}}/app
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.counter}}:${{ env.SHORT_SHA }}
+
+
+  update-tag:
+    runs-on: ubuntu-latest
+    needs: [build-counter-apps]
+
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4 
+      
+      - name: Get short commit SHA
+        id: vars
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: update values.yaml with new tag 
+        run: |
+          sed -i "s/appTag: .*/appTag: ${SHORT_SHA}/" argocd/helm-charts/counter-better/values.yaml
+          sed -i "s/appTag: .*/appTag: ${SHORT_SHA}/" argocd/helm-charts/counter-service/values.yaml
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update Counter Apps Image Tag to ${{ env.SHORT_SHA }}"
+          branch: main
+          file_pattern: argocd/helm-charts/*/values.yaml
+          
