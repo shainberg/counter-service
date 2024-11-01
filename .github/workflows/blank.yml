@@ -52,7 +52,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/counter-service:latest  # Change `my-app` to your image name
+          tags: ${{ vars.DOCKER_HUB_USERNAME }}/counter-service:latest  # Change `my-app` to your image name
   
   deploy:
       runs-on: ubuntu-latest
