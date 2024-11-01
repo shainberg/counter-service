@@ -46,12 +46,17 @@ jobs:
         with:
           username: ${{ vars.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-          
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: dev  # Ensure you are checking out the dev branch
+      
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ${{ github.workspace }}
-          file: ${{ github.workspace }}/Dockerfile
+          context: ${{ github.workspace }}/
+          file: Dockerfile
           push: true
           tags: ${{ vars.DOCKER_HUB_USERNAME }}/counter-service:latest  # Change `my-app` to your image name
   
