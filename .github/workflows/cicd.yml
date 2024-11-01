@@ -49,7 +49,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ${{ github.workspace }}
           file: Dockerfile
           push: true
           tags: ${{ vars.DOCKER_HUB_USERNAME }}/counter-service:latest  # Change `my-app` to your image name
