@@ -56,9 +56,10 @@
     kubectl get svc
     kubectl get ingress
   - make sure the Ingress is providing you the DNS (of aws lb) as well, it might take many second at first time
-  Endpoints
-    POST /: Increments the counter
-    GET /: Returns the current counter value.
+  
+  # Endpoints
+    - POST /: Increments the counter
+    - GET /: Returns the current counter value.
     
 ### CI/CD Pipeline
 - The CI pipeline is configured to trigger on every push to the main and dev branch, which builds the Docker image and pushes it to the Docker registry.
