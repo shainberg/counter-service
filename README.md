@@ -1,4 +1,7 @@
 # Counter Service
+temporary link to the service:
+   http://k8s-default-ingressc-adc31b5016-937905870.eu-west-1.elb.amazonaws.com/
+
 
 ## Overview
 
