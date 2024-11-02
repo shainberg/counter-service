@@ -13,6 +13,7 @@ data "aws_eks_cluster_auth" "cluster_auth" {
 
 # Filter out local zones, which are not currently supported 
 # with managed node groups
+
 data "aws_availability_zones" "available" {
   filter {
     name   = "opt-in-status"
@@ -194,7 +195,7 @@ module "eks" {
 
   }
 
-  cluster_upgrade_policy = {  # Add this block
+  cluster_upgrade_policy = {  
     support_type = "STANDARD"  # Set to STANDARD or EXTENDED as needed
   }
 
@@ -441,77 +442,3 @@ resource "helm_release" "aws_load_balancer_controller" {
     value = "eu-west-1"
   }
 }
-
-
-
-
-
-
-
-#==================================
-/*
-#installing ingress for that cluster
-
-
-
-
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.my_cluster.endpoint
-  token                  = data.aws_eks_cluster_auth.cluster_auth.token
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-}
-
-provider "helm" {
-  kubernetes {
-    
-    host                   = data.aws_eks_cluster.my_cluster.endpoint
-    token                  = data.aws_eks_cluster_auth.cluster_auth.token
-    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  }
-}
-
-resource "helm_release" "nginx_ingress" {
-  name       = "nginx-ingress"
-  repository = "https://charts.helm.sh/stable"
-  chart      = "nginx-ingress"
-  version    = "3.7.0" #Specify a suitable version
-  
-
-  set {
-    name  = "controller.service.type"
-    value = "LoadBalancer" # This will create a LoadBalancer for external access
-  }
-}
-
-resource "kubernetes_ingress" "my_ingress" {
-  metadata {
-    name = "my-ingress"
-    annotations = {
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
-    }
-  }
-
-  spec {
-    rule {
-      host = "eu-west-1.elb.amazonaws.com" # Change to your domain or leave as is for testing
-
-      http {
-        path {
-          path = "/"
-          path_type = "Prefix"
-
-          backend {
-            service {
-              name = "your-service-name" # Change to your service name
-              port {
-                number = 80 # Change to your service port
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-*/
