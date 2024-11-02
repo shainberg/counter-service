@@ -32,8 +32,13 @@
    ```bash
    git clone https://github.com/<your-github-username>/counter-service.git
    cd counter-service
-   
-2. **Initialize the Terraform:**
+2. **Configure AWS Credentials:**
+   Ensure that your AWS credentials are configured. You can do this by creating a file at `~/.aws/credentials` with the following format:
+   ```bash
+   [default]
+   aws_access_key_id = YOUR_ACCESS_KEY
+   aws_secret_access_key = YOUR_SECRET_KEY
+4. **Initialize the Terraform:**
    - Make sure your `versions.tf` file specifies the required provider and Terraform versions
    - aws module version: `5.62.0`
    - terraform client version: `1.3`
@@ -41,7 +46,7 @@
     cd terraform
     terraform init
     terraform apply
-3. **Deploy the Kubernetes components:**
+5. **Deploy the Kubernetes components:**
   - Navigate to the directory containing your Kubernetes manifests (`deployment` folder):
     ```bash
     kubectl apply -f deployment/
