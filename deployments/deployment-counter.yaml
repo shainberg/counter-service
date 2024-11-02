@@ -15,8 +15,6 @@ spec:
     spec:
       containers:
       - name: counter-service
-        image: ruslanve/counter-service:latest # Replace this with your image
+        image: ruslanve/counter-service:2143 # Replace this with your image
         ports:
-        - port: 80
-          targetPort: 80
-          protocol: TCP
+        - containerPort: 80

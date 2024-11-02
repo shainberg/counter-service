@@ -3,6 +3,10 @@ kind: Ingress
 metadata:
   name: ingress-counter
   namespace: default  # Change to your desired namespace if needed
+  annotations:
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-port: "80"  # Set to a valid port
+    alb.ingress.kubernetes.io/scheme: internet-facing
 spec:
   ingressClassName: alb  # Use the AWS ALB ingress class
   rules:

@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, request, request_started
+from flask import Flask, request, request_started, render_template_string
 
 app = Flask(__name__)
 counter = 0
@@ -10,6 +10,6 @@ def index():
         counter+=1
         return "Hmm, Plus 1 please "
     else:
-        return str(f"Our counter is: {counter} ")
+        return render_template_string(f"<h1>Welcome to the Counter Service</h1><img src='/static/CHKP.png' alt='Logo'><p>Our counter is: {counter}</p>")
 if __name__ == '__main__':
     app.run(debug=True,port=80,host='0.0.0.0')

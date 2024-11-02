@@ -10,4 +10,3 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80  # Port on the pod
-  type: LoadBalancer  # Internal service
