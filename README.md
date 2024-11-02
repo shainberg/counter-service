@@ -34,15 +34,15 @@ It has been implemented as a Dockerized application deployed on Kubernetes, leve
    cd counter-service
    
 2. **Initialize the Terraform:**
-   - Make sure your versions.tf file specifies the required provider and Terraform versions
-   - aws module version 5.62.0
-   - terraform client version 1.3
+   - Make sure your `versions.tf` file specifies the required provider and Terraform versions
+   - aws module version `5.62.0`
+   - terraform client version `1.3`
     ```bash
     cd terraform
     terraform init
     terraform apply
 3. **Deploy the Kubernetes components:**
-  - Navigate to the directory containing your Kubernetes manifests (deployment folder):
+  - Navigate to the directory containing your Kubernetes manifests (`deployment` folder):
     ```bash
     kubectl apply -f deployment/
   - Verify the deployment
