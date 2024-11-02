@@ -57,7 +57,7 @@
     kubectl get ingress
   - make sure the Ingress is providing you the DNS (of aws lb) as well, it might take many second at first time
   
-  # Endpoints
+  *Endpoints*
     - POST /: Increments the counter
     - GET /: Returns the current counter value.
     
