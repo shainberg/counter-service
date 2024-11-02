@@ -33,7 +33,7 @@
    git clone https://github.com/<your-github-username>/counter-service.git
    cd counter-service
 2. **Configure AWS Credentials:**
-   Ensure that your AWS credentials are configured. You can do this by creating a file at `~/.aws/credentials` with the following format:
+   - Ensure that your AWS credentials are configured. You can do this by creating a file at `~/.aws/credentials` with the following format:
    ```bash
    [default]
    aws_access_key_id = YOUR_ACCESS_KEY
