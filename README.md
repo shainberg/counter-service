@@ -35,8 +35,8 @@ It has been implemented as a Dockerized application deployed on Kubernetes, leve
    
 2. **Initialize the Terraform:**
    - Make sure your `versions.tf` file specifies the required provider and Terraform versions
-   - aws module version `5.62.0`
-   - terraform client version `1.3`
+   - aws module version: `5.62.0`
+   - terraform client version: `1.3`
     ```bash
     cd terraform
     terraform init
