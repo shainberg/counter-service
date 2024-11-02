@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire application code
 COPY counter-service.py .
+RUN mkdir static
+COPY CHKP.png ./static/
 
 # Expose the port
 EXPOSE 80
