@@ -2,8 +2,8 @@
 
 ## Overview
 
-This project is a simple Python nano service that counts the number of POST requests it receives and returns the count on each GET request. 
-It has been implemented as a Dockerized application deployed on Kubernetes, leveraging a ReplicaSet to ensure high availability.
+- This project is a simple Python nano service that counts the number of POST requests it receives and returns the count on each GET request. 
+- It has been implemented as a Dockerized application deployed on Kubernetes, leveraging a ReplicaSet to ensure high availability.
 
 ## Features
 
@@ -56,9 +56,9 @@ It has been implemented as a Dockerized application deployed on Kubernetes, leve
     GET /: Returns the current counter value.
     
 ### CI/CD Pipeline
-The CI pipeline is configured to trigger on every push to the main and dev branch, which builds the Docker image and pushes it to the Docker registry.
-The CD pipeline ensures that any new changes are automatically deployed to the production namespace in EKS Kubernetes.
+- The CI pipeline is configured to trigger on every push to the main and dev branch, which builds the Docker image and pushes it to the Docker registry.
+- The CD pipeline ensures that any new changes are automatically deployed to the production namespace in EKS Kubernetes.
 
 ## Future Improvements
-Implement Redis for better state management and performance.
-Introduce more advanced error handling and monitoring.
+- Implement Redis for better state management and performance.
+- Introduce more advanced error handling and monitoring.
