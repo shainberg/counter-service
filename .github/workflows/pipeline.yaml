@@ -1,0 +1,129 @@
+name:  Build, Lint and Deploy Dev
+
+on:
+  push:
+    branches:
+      - '**'
+
+
+env:
+  IMAGE: counter
+  REGISTRY: ghcr.io
+  DOCKER_BUILDKIT: 0
+  COMPOSE_DOCKER_CLI_BUILD: 0
+  HELM_VERSION: 'v3.9.0'
+
+
+jobs:
+  lint-helm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Helm lint
+        run: |
+          helm lint counter-service-chart
+
+  determine-environment-and-tag:
+    uses: ./.github/workflows/determine-environment-and-tag.yaml
+    needs:
+      - lint-helm
+
+  build:
+    runs-on: ubuntu-latest
+    needs:
+      - lint-helm
+      - determine-environment-and-tag
+    outputs:
+      lower_repo_name: ${{ steps.lowercase.outputs.lower_repo_name }}
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download environment data
+        uses: actions/download-artifact@v3
+        with:
+          name: environment-data
+
+      - name: Read environment variables from file
+        id: read-env
+        run: |
+          source outputs.txt
+          echo "ENV=${env}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${image_tag}" >> $GITHUB_ENV
+
+      - name: Convert Repository Name to Lowercase
+        id: lowercase
+        run: |
+          # Convert the GITHUB_REPOSITORY to lowercase and set it as an environment variable
+          lower_repo_name=${GITHUB_REPOSITORY@L}
+          echo "LOWER_REPO_NAME=${lower_repo_name}" >> "${GITHUB_ENV}"
+          echo "lower_repo_name=${lower_repo_name}" >> $GITHUB_OUTPUT
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Login to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push image to registry
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG}}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Inspect
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.LOWER_REPO_NAME }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG}}
+
+  package:
+    needs: lint-helm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Upload Helm chart artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: helm-chart
+          path: counter-service-chart/*.tgz  # Path to the packaged chart file
+
+  deploy:
+    uses: ./.github/workflows/deploy-template.yaml
+    needs:
+      - lint-helm
+      - package
+      - build
+    with:
+      env: ${{ needs.determine-environment-and-tag.outputs.env }}
