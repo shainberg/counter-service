@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-counter
+  namespace: default  # Change to your desired namespace if needed
+spec:
+  selector:
+    app: counter-service # This must match the Deployment's selector
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80  # Port on the pod
